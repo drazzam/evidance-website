@@ -1,0 +1,252 @@
+.navbar {
+  background: rgba(255, 255, 255, 0.98);
+  height: 80px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-size: 16px;
+  position: sticky;
+  top: 0;
+  z-index: 999;
+  transition: all 0.3s ease;
+  backdrop-filter: blur(10px);
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+}
+
+.navbar-scrolled {
+  height: 70px;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+}
+
+.navbar-container {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  width: 100%;
+  max-width: 1280px;
+  padding: 0 20px;
+  margin: 0 auto;
+}
+
+.navbar-logo {
+  display: flex;
+  align-items: center;
+  text-decoration: none;
+  transition: transform 0.3s ease;
+}
+
+.navbar-logo:hover {
+  transform: scale(1.05);
+}
+
+.logo-img {
+  height: 45px;
+  width: auto;
+  margin-right: 12px;
+  object-fit: contain;
+}
+
+.navbar-scrolled .logo-img {
+  height: 40px;
+}
+
+.logo-text {
+  font-size: 24px;
+  font-weight: 700;
+  color: var(--primary-blue);
+  font-family: 'Inter', sans-serif;
+}
+
+.nav-menu {
+  display: flex;
+  align-items: center;
+  list-style: none;
+  text-align: center;
+  margin: 0;
+  padding: 0;
+}
+
+.nav-item {
+  height: 80px;
+  display: flex;
+  align-items: center;
+}
+
+.navbar-scrolled .nav-item {
+  height: 70px;
+}
+
+.nav-links {
+  color: var(--text-primary);
+  display: flex;
+  align-items: center;
+  text-decoration: none;
+  padding: 0 20px;
+  height: 100%;
+  font-weight: 500;
+  transition: all 0.3s ease;
+  position: relative;
+}
+
+.nav-links::after {
+  content: '';
+  position: absolute;
+  bottom: 0;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 0;
+  height: 3px;
+  background: var(--primary-blue);
+  transition: width 0.3s ease;
+}
+
+.nav-links:hover {
+  color: var(--primary-blue);
+}
+
+.nav-links:hover::after,
+.nav-links.active::after {
+  width: 60%;
+}
+
+.nav-links.active {
+  color: var(--primary-blue);
+  font-weight: 600;
+}
+
+.nav-links-cta {
+  background: var(--gradient-primary);
+  color: var(--white) !important;
+  border-radius: 8px;
+  margin-left: 20px;
+  padding: 10px 24px;
+  height: auto;
+}
+
+.nav-links-cta::after {
+  display: none;
+}
+
+.nav-links-cta:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(30, 58, 138, 0.3);
+}
+
+.menu-icon {
+  display: none;
+}
+
+.hamburger {
+  width: 28px;
+  height: 20px;
+  position: relative;
+  cursor: pointer;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+}
+
+.hamburger span {
+  display: block;
+  height: 3px;
+  width: 100%;
+  background: var(--primary-blue);
+  border-radius: 3px;
+  transition: all 0.3s ease;
+}
+
+.hamburger.active span:nth-child(1) {
+  transform: translateY(8.5px) rotate(45deg);
+}
+
+.hamburger.active span:nth-child(2) {
+  opacity: 0;
+}
+
+.hamburger.active span:nth-child(3) {
+  transform: translateY(-8.5px) rotate(-45deg);
+}
+
+@media screen and (max-width: 960px) {
+  .nav-menu {
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    position: absolute;
+    top: 80px;
+    left: -100%;
+    opacity: 1;
+    transition: all 0.5s ease;
+    background: rgba(255, 255, 255, 0.98);
+    backdrop-filter: blur(10px);
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+  }
+
+  .navbar-scrolled .nav-menu {
+    top: 70px;
+  }
+
+  .nav-menu.active {
+    left: 0;
+    opacity: 1;
+    transition: all 0.5s ease;
+    z-index: 1;
+  }
+
+  .nav-item {
+    width: 100%;
+    height: 60px;
+  }
+
+  .nav-links {
+    text-align: center;
+    padding: 16px;
+    width: 100%;
+    display: table;
+  }
+
+  .nav-links::after {
+    display: none;
+  }
+
+  .nav-links:hover {
+    background-color: var(--light-blue);
+    color: var(--primary-blue);
+    border-radius: 0;
+  }
+
+  .nav-links-cta {
+    margin: 16px auto;
+    width: 90%;
+    display: block;
+    border-radius: 8px;
+  }
+
+  .menu-icon {
+    display: block;
+    cursor: pointer;
+    padding: 10px;
+  }
+
+  .logo-img {
+    height: 40px;
+  }
+
+  .navbar-scrolled .logo-img {
+    height: 35px;
+  }
+}
+
+@media screen and (max-width: 480px) {
+  .logo-text {
+    font-size: 20px;
+  }
+  
+  .logo-img {
+    height: 35px;
+  }
+  
+  .navbar-scrolled .logo-img {
+    height: 30px;
+  }
+}
