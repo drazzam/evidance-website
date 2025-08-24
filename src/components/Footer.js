@@ -11,7 +11,7 @@ const Footer = () => {
         <div className="footer-content">
           <div className="footer-section">
             <div className="footer-logo">
-              <img src="/evidance-website/images/evidance_logo.PNG" alt="Evidance" className="footer-logo-img" />
+              <img src="/evidance-website/images/evidance_logo.png" alt="Evidance" className="footer-logo-img" />
               <span className="footer-logo-text">Evidance</span>
             </div>
             <p className="footer-description">
