@@ -2,7 +2,7 @@
   "name": "evidance-website",
   "version": "1.0.0",
   "private": true,
-  "homepage": "https://yourusername.github.io/evidance-website",
+  "homepage": "https://drazzam.github.io/evidance-website",
   "dependencies": {
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
