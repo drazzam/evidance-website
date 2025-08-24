@@ -142,7 +142,7 @@ const Home = () => {
         <div className="container">
           <div className="vision-content">
             <img 
-              src="/evidance-website/images/Vision_2030.PNG" 
+              src="/evidance-website/images/Vision_2030.png" 
               alt="Saudi Vision 2030" 
               className="vision-logo"
             />
@@ -162,3 +162,4 @@ const Home = () => {
 };
 
 export default Home;
+
