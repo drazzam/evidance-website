@@ -1,20 +1,16 @@
 import React, { useState, useEffect } from 'react';
 import './Admin.css';
 
-// JSONBin configuration
-const JSONBIN_CONFIG = {
-  BIN_ID: '68b175b643b1c97be92f274d',
-  MASTER_KEY: '$2a$10$WWXSel9VjGXEalWwyvd2P.t/EYY8DpBCWilIR1zqhYkVEFqt.1R4y',
-  ACCESS_KEY: '$2a$10$fo2nyFgpKh.7vGOagvtbNuy2pSUNpDjClzarA1EVdylXC6Gk6FC1C',
-  BASE_URL: 'https://api.jsonbin.io/v3'
-};
-
 const Admin = () => {
   const [isAuthenticated, setIsAuthenticated] = useState(false);
   const [loading, setLoading] = useState(false);
   const [saveStatus, setSaveStatus] = useState('');
   const [credentials, setCredentials] = useState({ username: '', password: '' });
   const [activeTab, setActiveTab] = useState('content');
+  
+  // JSONBin configuration
+  const JSONBIN_BIN_ID = '68b175b643b1c97be92f274d';
+  const JSONBIN_MASTER_KEY = '$2a$10$WWXSel9VjGXEalWwyvd2P.t/EYY8DpBCWilIR1zqhYkVEFqt.1R4y';
   
   // Who We Are page structured content
   const [whoWeAre, setWhoWeAre] = useState({
@@ -113,15 +109,21 @@ const Admin = () => {
   const loadFromJSONBin = async () => {
     try {
       setLoading(true);
-      const response = await fetch(`${JSONBIN_CONFIG.BASE_URL}/b/${JSONBIN_CONFIG.BIN_ID}/latest`, {
+      console.log('Loading from JSONBin...');
+      
+      const response = await fetch(`https://api.jsonbin.io/v3/b/${JSONBIN_BIN_ID}/latest`, {
         method: 'GET',
         headers: {
-          'X-Master-Key': JSONBIN_CONFIG.MASTER_KEY
+          'X-Master-Key': JSONBIN_MASTER_KEY,
+          'Content-Type': 'application/json'
         }
       });
 
+      console.log('Response status:', response.status);
+      
       if (response.ok) {
         const result = await response.json();
+        console.log('Data loaded:', result);
         const data = result.record;
         
         if (data) {
@@ -134,12 +136,42 @@ const Admin = () => {
           if (data.homeSections) setHomeSections(data.homeSections);
           if (data.publications) setPublications(data.publications);
           if (data.contactInfo) setContactInfo(data.contactInfo);
+          
+          // Also update localStorage
+          localStorage.setItem('evidance_data', JSON.stringify(data));
         }
+      } else {
+        console.error('Failed to load from JSONBin:', response.statusText);
+        // Try loading from localStorage as fallback
+        loadFromLocalStorage();
       }
     } catch (error) {
       console.error('Error loading from JSONBin:', error);
+      // Try loading from localStorage as fallback
+      loadFromLocalStorage();
     } finally {
       setLoading(false);
+    }
+  };
+
+  // Load from localStorage as fallback
+  const loadFromLocalStorage = () => {
+    try {
+      const saved = localStorage.getItem('evidance_data');
+      if (saved) {
+        const data = JSON.parse(saved);
+        if (data.whoWeAre) setWhoWeAre(data.whoWeAre);
+        if (data.aimsGoals) setAimsGoals(data.aimsGoals);
+        if (data.successRecord) setSuccessRecord(data.successRecord);
+        if (data.visionaryModel) setVisionaryModel(data.visionaryModel);
+        if (data.joinUs) setJoinUs(data.joinUs);
+        if (data.heroContent) setHeroContent(data.heroContent);
+        if (data.homeSections) setHomeSections(data.homeSections);
+        if (data.publications) setPublications(data.publications);
+        if (data.contactInfo) setContactInfo(data.contactInfo);
+      }
+    } catch (error) {
+      console.error('Error loading from localStorage:', error);
     }
   };
 
@@ -147,7 +179,7 @@ const Admin = () => {
   const saveToJSONBin = async () => {
     try {
       setLoading(true);
-      setSaveStatus('Saving changes globally...');
+      setSaveStatus('Saving changes...');
       
       const allData = {
         whoWeAre,
@@ -162,29 +194,35 @@ const Admin = () => {
         lastUpdated: new Date().toISOString()
       };
 
-      const response = await fetch(`${JSONBIN_CONFIG.BASE_URL}/b/${JSONBIN_CONFIG.BIN_ID}`, {
+      // First save to localStorage
+      localStorage.setItem('evidance_data', JSON.stringify(allData));
+      
+      console.log('Saving to JSONBin...');
+      
+      const response = await fetch(`https://api.jsonbin.io/v3/b/${JSONBIN_BIN_ID}`, {
         method: 'PUT',
         headers: {
           'Content-Type': 'application/json',
-          'X-Master-Key': JSONBIN_CONFIG.MASTER_KEY,
-          'X-Bin-Versioning': 'false'
+          'X-Master-Key': JSONBIN_MASTER_KEY
         },
         body: JSON.stringify(allData)
       });
 
+      console.log('Save response status:', response.status);
+      
       if (response.ok) {
-        // Also save to localStorage for faster initial load
-        localStorage.setItem('evidance_data_cache', JSON.stringify(allData));
-        localStorage.setItem('evidance_last_update', new Date().toISOString());
-        
         setSaveStatus('✓ Changes saved successfully! All devices will see the updates.');
-        setTimeout(() => setSaveStatus(''), 3000);
+        setTimeout(() => setSaveStatus(''), 5000);
       } else {
-        setSaveStatus('Error saving changes. Please try again.');
+        const errorText = await response.text();
+        console.error('Save error response:', errorText);
+        setSaveStatus('Saved locally. JSONBin update pending.');
+        setTimeout(() => setSaveStatus(''), 5000);
       }
     } catch (error) {
-      console.error('Error saving to JSONBin:', error);
-      setSaveStatus('Error saving changes. Please try again.');
+      console.error('Error saving:', error);
+      setSaveStatus('Saved locally. Cloud sync failed.');
+      setTimeout(() => setSaveStatus(''), 5000);
     } finally {
       setLoading(false);
     }
@@ -195,6 +233,9 @@ const Admin = () => {
     const authStatus = sessionStorage.getItem('adminAuth');
     if (authStatus === 'true') {
       setIsAuthenticated(true);
+      // First load from localStorage for instant display
+      loadFromLocalStorage();
+      // Then try to sync with JSONBin
       loadFromJSONBin();
     }
   }, []);
@@ -204,6 +245,7 @@ const Admin = () => {
     if (credentials.username === 'admin' && credentials.password === 'AdminCNS12**') {
       setIsAuthenticated(true);
       sessionStorage.setItem('adminAuth', 'true');
+      loadFromLocalStorage();
       loadFromJSONBin();
     } else {
       alert('Invalid credentials!');
@@ -218,7 +260,7 @@ const Admin = () => {
 
   const handleImageUpload = (pubId, e) => {
     const file = e.target.files[0];
-    if (file) {
+    if (file && file.size < 500000) { // Limit to 500KB for base64
       const reader = new FileReader();
       reader.onloadend = () => {
         setPublications(prev => prev.map(pub => 
@@ -226,6 +268,8 @@ const Admin = () => {
         ));
       };
       reader.readAsDataURL(file);
+    } else {
+      alert('Please upload an image smaller than 500KB');
     }
   };
 
@@ -264,14 +308,14 @@ const Admin = () => {
             className="btn btn-accent"
             disabled={loading}
           >
-            {loading ? 'Saving...' : 'Save All Changes Globally'}
+            {loading ? 'Saving...' : 'Save All Changes'}
           </button>
           <button onClick={handleLogout} className="btn btn-secondary">Logout</button>
         </div>
       </div>
 
       {saveStatus && (
-        <div className={`save-status ${saveStatus.includes('✓') ? 'success' : 'error'}`}>
+        <div className={`save-status ${saveStatus.includes('✓') ? 'success' : saveStatus.includes('locally') ? 'warning' : 'error'}`}>
           {saveStatus}
         </div>
       )}
