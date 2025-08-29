@@ -3,12 +3,12 @@
   "name": "Evidance - Clinical Research Organization",
   "icons": [
     {
-      "src": "images/evidance_logo.PNG",
+      "src": "images/evidance_logo_transparent.png",
       "sizes": "192x192",
       "type": "image/png"
     },
     {
-      "src": "images/evidance_logo.PNG",
+      "src": "images/evidance_logo_transparent.png",
       "sizes": "512x512",
       "type": "image/png"
     }
