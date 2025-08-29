@@ -1,5 +1,5 @@
 import React from 'react';
-import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
+import { HashRouter as Router, Routes, Route } from 'react-router-dom';
 import './App.css';
 import Navbar from './components/Navbar';
 import Footer from './components/Footer';
@@ -14,7 +14,7 @@ import Admin from './pages/Admin';
 
 function App() {
   return (
-    <Router basename="/evidance-website">
+    <Router>
       <div className="App">
         <Navbar />
         <Routes>
