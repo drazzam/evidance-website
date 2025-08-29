@@ -1,14 +1,39 @@
 import React, { useState, useEffect } from 'react';
 
 const WhoWeAre = () => {
-  const [content, setContent] = useState('');
+  const [content, setContent] = useState({
+    storyTitle: 'Our Story',
+    storyContent: 'Evidance is a pioneering modified clinical research organization in Saudi Arabia, dedicated to bridging the gap between theoretical knowledge and practical research experience. We are committed to advancing healthcare research in alignment with Saudi Arabia\'s Vision 2030.',
+    teamTitle: 'Our Team',
+    teamContent: 'Our team consists of experienced clinical researchers, healthcare professionals, and education specialists dedicated to nurturing the next generation of clinical researchers.',
+    valuesTitle: 'Our Values',
+    valuesContent: 'Excellence, Innovation, Collaboration, and Impact drive everything we do at Evidance.'
+  });
 
   useEffect(() => {
-    const savedContent = localStorage.getItem('pageContent');
+    const savedContent = localStorage.getItem('whoWeAreContent');
     if (savedContent) {
-      const data = JSON.parse(savedContent);
-      setContent(data.whoWeAre || '');
+      try {
+        setContent(JSON.parse(savedContent));
+      } catch (error) {
+        console.error('Error loading content:', error);
+      }
     }
+
+    // Listen for storage changes
+    const handleStorageChange = () => {
+      const updatedContent = localStorage.getItem('whoWeAreContent');
+      if (updatedContent) {
+        try {
+          setContent(JSON.parse(updatedContent));
+        } catch (error) {
+          console.error('Error updating content:', error);
+        }
+      }
+    };
+
+    window.addEventListener('storage', handleStorageChange);
+    return () => window.removeEventListener('storage', handleStorageChange);
   }, []);
 
   return (
@@ -20,27 +45,16 @@ const WhoWeAre = () => {
       <div className="page-content">
         <div className="container">
           <div className="content-section">
-            {content ? (
-              <div dangerouslySetInnerHTML={{ __html: content.replace(/\n/g, '<br />') }} />
-            ) : (
-              <>
-                <h2>Our Story</h2>
-                <p>
-                  Evidance is a pioneering modified clinical research organization in Saudi Arabia, 
-                  dedicated to bridging the gap between theoretical knowledge and practical research experience. 
-                  We are committed to advancing healthcare research in alignment with Saudi Arabia's Vision 2030.
-                </p>
-                <h2>Our Team</h2>
-                <p>
-                  Our team consists of experienced clinical researchers, healthcare professionals, 
-                  and education specialists dedicated to nurturing the next generation of clinical researchers.
-                </p>
-                <h2>Our Values</h2>
-                <p>
-                  Excellence, Innovation, Collaboration, and Impact drive everything we do at Evidance.
-                </p>
-              </>
-            )}
+            <h2>{content.storyTitle}</h2>
+            <p>{content.storyContent}</p>
+          </div>
+          <div className="content-section">
+            <h2>{content.teamTitle}</h2>
+            <p>{content.teamContent}</p>
+          </div>
+          <div className="content-section">
+            <h2>{content.valuesTitle}</h2>
+            <p>{content.valuesContent}</p>
           </div>
         </div>
       </div>
