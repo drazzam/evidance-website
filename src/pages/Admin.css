@@ -95,6 +95,11 @@
   color: white;
 }
 
+.save-status.warning {
+  background: #f59e0b;
+  color: white;
+}
+
 @keyframes slideDown {
   from {
     opacity: 0;
