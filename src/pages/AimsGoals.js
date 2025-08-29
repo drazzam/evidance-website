@@ -1,14 +1,38 @@
 import React, { useState, useEffect } from 'react';
 
 const AimsGoals = () => {
-  const [content, setContent] = useState('');
+  const [content, setContent] = useState({
+    objectivesTitle: 'Primary Objectives',
+    objectivesContent: 'Our primary aim is to transform clinical research education by providing hands-on experience to healthcare students and practitioners. We focus on practical training that leads to published research, moving beyond theoretical knowledge to real-world application.',
+    goalsTitle: 'Strategic Goals',
+    goalsContent: 'We strive to establish Saudi Arabia as a leading hub for clinical research in the region, develop a sustainable pipeline of skilled clinical researchers, and facilitate high-impact research that addresses local and regional healthcare challenges.',
+    visionTitle: 'Future Vision',
+    visionContent: 'By 2030, we envision Evidance as the premier clinical research organization in the Middle East, having trained thousands of researchers and contributed to hundreds of published studies that improve healthcare outcomes across the region.'
+  });
 
   useEffect(() => {
-    const savedContent = localStorage.getItem('pageContent');
+    const savedContent = localStorage.getItem('aimsGoalsContent');
     if (savedContent) {
-      const data = JSON.parse(savedContent);
-      setContent(data.aimsGoals || '');
+      try {
+        setContent(JSON.parse(savedContent));
+      } catch (error) {
+        console.error('Error loading content:', error);
+      }
     }
+
+    const handleStorageChange = () => {
+      const updatedContent = localStorage.getItem('aimsGoalsContent');
+      if (updatedContent) {
+        try {
+          setContent(JSON.parse(updatedContent));
+        } catch (error) {
+          console.error('Error updating content:', error);
+        }
+      }
+    };
+
+    window.addEventListener('storage', handleStorageChange);
+    return () => window.removeEventListener('storage', handleStorageChange);
   }, []);
 
   return (
@@ -20,30 +44,16 @@ const AimsGoals = () => {
       <div className="page-content">
         <div className="container">
           <div className="content-section">
-            {content ? (
-              <div dangerouslySetInnerHTML={{ __html: content.replace(/\n/g, '<br />') }} />
-            ) : (
-              <>
-                <h2>Primary Objectives</h2>
-                <p>
-                  Our primary aim is to transform clinical research education by providing hands-on 
-                  experience to healthcare students and practitioners. We focus on practical training 
-                  that leads to published research, moving beyond theoretical knowledge to real-world application.
-                </p>
-                <h2>Strategic Goals</h2>
-                <p>
-                  We strive to establish Saudi Arabia as a leading hub for clinical research in the region, 
-                  develop a sustainable pipeline of skilled clinical researchers, and facilitate 
-                  high-impact research that addresses local and regional healthcare challenges.
-                </p>
-                <h2>Future Vision</h2>
-                <p>
-                  By 2030, we envision Evidance as the premier clinical research organization in the Middle East, 
-                  having trained thousands of researchers and contributed to hundreds of published studies 
-                  that improve healthcare outcomes across the region.
-                </p>
-              </>
-            )}
+            <h2>{content.objectivesTitle}</h2>
+            <p>{content.objectivesContent}</p>
+          </div>
+          <div className="content-section">
+            <h2>{content.goalsTitle}</h2>
+            <p>{content.goalsContent}</p>
+          </div>
+          <div className="content-section">
+            <h2>{content.visionTitle}</h2>
+            <p>{content.visionContent}</p>
           </div>
         </div>
       </div>
