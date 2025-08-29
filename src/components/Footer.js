@@ -3,7 +3,7 @@ import './Footer.css';
 
 const Footer = () => {
   const currentYear = new Date().getFullYear();
-
+  
   return (
     <footer className="footer">
       <div className="footer-container">
@@ -14,20 +14,32 @@ const Footer = () => {
               Transforming clinical research in Saudi Arabia through innovative 
               collaboration and hands-on training experiences.
             </p>
+            <div className="vision-2030-container">
+              <img 
+                src={`${process.env.PUBLIC_URL}/images/Vision_2030.png`}
+                alt="Saudi Vision 2030" 
+                className="vision-logo"
+              />
+            </div>
           </div>
-
+          
           <div className="footer-section">
             <h3 className="footer-title">Get in Touch</h3>
             <p className="footer-contact">
               Ready to advance your research career? 
               Connect with us to learn more about our programs.
             </p>
-            <a href="https://wa.me/00966549450781" target="_blank" rel="noopener noreferrer" className="btn btn-accent footer-cta">
+            <a 
+              href="https://wa.me/00966549450781" 
+              target="_blank" 
+              rel="noopener noreferrer" 
+              className="btn btn-accent footer-cta"
+            >
               Contact Us!
             </a>
           </div>
         </div>
-
+        
         <div className="footer-bottom">
           <p className="footer-copyright">
             © {currentYear} Evidance. All rights reserved. | Proudly supporting Saudi Vision 2030
