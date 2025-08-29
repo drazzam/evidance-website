@@ -57,15 +57,21 @@
 .hero-logo-container {
   display: flex;
   justify-content: center;
-  margin-bottom: 30px;
+  margin-bottom: 40px;
   animation: fadeInUp 1s ease 0.2s both;
 }
 
+/* MUCH LARGER LOGO SIZE */
 .hero-logo {
-  height: 120px;
+  height: 200px;
   width: auto;
   object-fit: contain;
-  filter: drop-shadow(0 4px 6px rgba(0, 0, 0, 0.1));
+  filter: drop-shadow(0 6px 12px rgba(0, 0, 0, 0.15));
+  transition: transform 0.3s ease;
+}
+
+.hero-logo:hover {
+  transform: scale(1.05);
 }
 
 @keyframes fadeInUp {
@@ -77,21 +83,6 @@
     opacity: 1;
     transform: translateY(0);
   }
-}
-
-.hero-badge {
-  display: inline-block;
-  padding: 8px 20px;
-  background: linear-gradient(135deg, rgba(30, 58, 138, 0.1) 0%, rgba(59, 130, 246, 0.1) 100%);
-  border-radius: 50px;
-  margin-bottom: 24px;
-  animation: fadeInUp 1s ease 0.4s both;
-}
-
-.hero-badge span {
-  font-size: 14px;
-  font-weight: 600;
-  color: var(--primary-blue);
 }
 
 .hero-title {
@@ -199,13 +190,20 @@
   color: var(--text-secondary);
 }
 
+/* Responsive adjustments */
+@media (max-width: 1200px) {
+  .hero-logo {
+    height: 180px;
+  }
+}
+
 @media (max-width: 968px) {
   .hero {
     padding: 100px 20px 60px;
   }
 
   .hero-logo {
-    height: 100px;
+    height: 160px;
   }
 
   .hero-title {
@@ -228,7 +226,7 @@
 
 @media (max-width: 640px) {
   .hero-logo {
-    height: 80px;
+    height: 140px;
   }
 
   .hero-title {
@@ -261,5 +259,11 @@
 
   .stat-item h3 {
     font-size: 28px;
+  }
+}
+
+@media (max-width: 480px) {
+  .hero-logo {
+    height: 120px;
   }
 }
