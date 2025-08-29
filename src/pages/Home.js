@@ -6,6 +6,18 @@ import './Home.css';
 const Home = () => {
   const [visible, setVisible] = useState({});
   const [publicationImages, setPublicationImages] = useState([]);
+  const [sections, setSections] = useState({
+    publicationsTitle: 'Recent Publications',
+    publicationsText: 'Explore our latest research contributions advancing healthcare knowledge. Our team consistently publishes high-impact studies in leading medical journals, showcasing innovative approaches to clinical research.',
+    aimsTitle: 'What Are Our Aims and Goals?',
+    aimsText: 'We aim to transform clinical research education by providing hands-on experience to healthcare students and practitioners. Our goal is to facilitate practical training that leads to published research, not just theoretical knowledge.',
+    researchTitle: 'Research Impact & Innovation',
+    researchText: 'Our research initiatives focus on addressing critical healthcare challenges in Saudi Arabia and the broader region. Through collaborative partnerships and cutting-edge methodologies, we\'re driving meaningful change in clinical practice and patient outcomes.',
+    visionaryTitle: 'Our Visionary Model',
+    visionaryText: 'We implement a novel model of clinical research organization that aims mainly on digital presence and over the network interconnection between healthcare practitioners, students, and other individuals interested in clinical research for opportunities.',
+    joinUsTitle: 'Join Us!',
+    joinUsText: 'Be part of Saudi Arabia\'s clinical research transformation. Whether you\'re a healthcare student seeking practical experience or a practitioner ready to contribute to groundbreaking research, Evidance is your gateway to excellence in clinical research.'
+  });
 
   useEffect(() => {
     const observer = new IntersectionObserver(
@@ -22,28 +34,79 @@ const Home = () => {
       { threshold: 0.1 }
     );
 
-    const sections = document.querySelectorAll('.home-section');
-    sections.forEach((section) => observer.observe(section));
+    const sectionElements = document.querySelectorAll('.home-section');
+    sectionElements.forEach((section) => observer.observe(section));
 
-    // Load publication images from localStorage (admin can update these)
-    const savedImages = localStorage.getItem('publicationImages');
-    if (savedImages) {
-      setPublicationImages(JSON.parse(savedImages));
-    } else {
-      // Default placeholder images
-      setPublicationImages([
-        '/images/pub1.jpg',
-        '/images/pub2.jpg',
-        '/images/pub3.jpg',
-        '/images/pub4.jpg',
-        '/images/pub5.jpg'
-      ]);
+    // Load home sections content
+    const savedSections = localStorage.getItem('homeSections');
+    if (savedSections) {
+      try {
+        setSections(JSON.parse(savedSections));
+      } catch (error) {
+        console.error('Error loading sections:', error);
+      }
     }
 
+    // Load publication images
+    const savedImages = localStorage.getItem('publicationImages');
+    if (savedImages) {
+      try {
+        const images = JSON.parse(savedImages);
+        // Filter out empty strings
+        const validImages = images.filter(img => img && img.length > 0);
+        if (validImages.length > 0) {
+          setPublicationImages(validImages);
+        } else {
+          setPublicationImages(['/images/pub-placeholder.jpg']);
+        }
+      } catch (error) {
+        console.error('Error loading images:', error);
+        setPublicationImages(['/images/pub-placeholder.jpg']);
+      }
+    } else {
+      setPublicationImages(['/images/pub-placeholder.jpg']);
+    }
+
+    // Listen for storage changes
+    const handleStorageChange = () => {
+      const updatedSections = localStorage.getItem('homeSections');
+      if (updatedSections) {
+        try {
+          setSections(JSON.parse(updatedSections));
+        } catch (error) {
+          console.error('Error updating sections:', error);
+        }
+      }
+
+      const updatedImages = localStorage.getItem('publicationImages');
+      if (updatedImages) {
+        try {
+          const images = JSON.parse(updatedImages);
+          const validImages = images.filter(img => img && img.length > 0);
+          if (validImages.length > 0) {
+            setPublicationImages(validImages);
+          }
+        } catch (error) {
+          console.error('Error updating images:', error);
+        }
+      }
+    };
+
+    window.addEventListener('storage', handleStorageChange);
+
     return () => {
-      sections.forEach((section) => observer.unobserve(section));
+      sectionElements.forEach((section) => observer.unobserve(section));
+      window.removeEventListener('storage', handleStorageChange);
     };
   }, []);
+
+  const scrollCarousel = (direction) => {
+    const track = document.querySelector('.carousel-track');
+    if (track) {
+      const scrollAmount = direction === 'next' ? 300 : -300;
+      track.scrollBy({ left: scrollAmount, behavior: 'smooth' });
+    }
+  };
 
   return (
     <div className="home">
@@ -53,12 +116,8 @@ const Home = () => {
         <div className="container">
           <div className="section-content">
             <div className="section-text">
-              <h2 className="section-title">Recent Publications</h2>
-              <p className="section-description">
-                Explore our latest research contributions advancing healthcare knowledge. 
-                Our team consistently publishes high-impact studies in leading medical journals, 
-                showcasing innovative approaches to clinical research.
-              </p>
+              <h2 className="section-title">{sections.publicationsTitle}</h2>
+              <p className="section-description">{sections.publicationsText}</p>
               <Link to="/publications" className="btn btn-primary">
                 See More Progress & Achievements
               </Link>
@@ -68,12 +127,16 @@ const Home = () => {
                 <div className="carousel-track">
                   {publicationImages.map((img, index) => (
                     <div key={index} className="publication-slide">
-                      <img src={process.env.PUBLIC_URL + img} alt={`Publication ${index + 1}`} />
+                      {img.startsWith('data:') ? (
+                        <img src={img} alt={`Publication ${index + 1}`} />
+                      ) : (
+                        <img src={process.env.PUBLIC_URL + img} alt={`Publication ${index + 1}`} />
+                      )}
                     </div>
                   ))}
                 </div>
-                <button className="carousel-btn prev" onClick={() => document.querySelector('.carousel-track').scrollBy(-300, 0)}>‹</button>
-                <button className="carousel-btn next" onClick={() => document.querySelector('.carousel-track').scrollBy(300, 0)}>›</button>
+                <button className="carousel-btn prev" onClick={() => scrollCarousel('prev')}>‹</button>
+                <button className="carousel-btn next" onClick={() => scrollCarousel('next')}>›</button>
               </div>
             </div>
           </div>
@@ -84,12 +147,8 @@ const Home = () => {
         <div className="container">
           <div className="section-content reverse">
             <div className="section-text">
-              <h2 className="section-title">What Are Our Aims and Goals?</h2>
-              <p className="section-description">
-                We aim to transform clinical research education by providing hands-on experience 
-                to healthcare students and practitioners. Our goal is to facilitate practical training 
-                that leads to published research, not just theoretical knowledge.
-              </p>
+              <h2 className="section-title">{sections.aimsTitle}</h2>
+              <p className="section-description">{sections.aimsText}</p>
               <Link to="/aims-goals" className="btn btn-secondary">
                 Explore Our Mission
               </Link>
@@ -105,12 +164,8 @@ const Home = () => {
         <div className="container">
           <div className="section-content-centered">
             <div className="section-text-centered">
-              <h2 className="section-title">Research Impact & Innovation</h2>
-              <p className="section-description">
-                Our research initiatives focus on addressing critical healthcare challenges in Saudi Arabia 
-                and the broader region. Through collaborative partnerships and cutting-edge methodologies, 
-                we're driving meaningful change in clinical practice and patient outcomes.
-              </p>
+              <h2 className="section-title">{sections.researchTitle}</h2>
+              <p className="section-description">{sections.researchText}</p>
             </div>
             <div className="impact-highlights">
               <div className="impact-item">
@@ -137,15 +192,8 @@ const Home = () => {
         <div className="container">
           <div className="section-content reverse">
             <div className="section-text">
-              <h2 className="section-title">Our Visionary Model</h2>
-              <p className="section-description">
-                We implement a novel model of clinical research organization that aims mainly on digital 
-                presence and over the network interconnection between healthcare practitioners, students, 
-                and other individuals interested in clinical research for opportunities, we're revolutionizing 
-                how clinical research is conducted in Saudi Arabia. Our innovative approach combines 
-                high-quality research excellence with modern digital platforms, creating unprecedented 
-                opportunities for collaboration and growth.
-              </p>
+              <h2 className="section-title">{sections.visionaryTitle}</h2>
+              <p className="section-description">{sections.visionaryText}</p>
               <Link to="/visionary-model" className="btn btn-secondary">
                 Discover Our Approach
               </Link>
@@ -160,12 +208,8 @@ const Home = () => {
       <section id="section-5" className={`home-section join-us-section ${visible['section-5'] ? 'visible' : ''}`}>
         <div className="container">
           <div className="cta-section">
-            <h2 className="cta-title">Join Us!</h2>
-            <p className="cta-description">
-              Be part of Saudi Arabia's clinical research transformation. Whether you're a healthcare student 
-              seeking practical experience or a practitioner ready to contribute to groundbreaking research, 
-              Evidance is your gateway to excellence in clinical research.
-            </p>
+            <h2 className="cta-title">{sections.joinUsTitle}</h2>
+            <p className="cta-description">{sections.joinUsText}</p>
             <div className="cta-buttons">
               <a href="https://wa.me/00966549450781" target="_blank" rel="noopener noreferrer" className="btn btn-accent">
                 Contact Us!
