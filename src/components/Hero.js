@@ -17,8 +17,12 @@ const Hero = () => {
       
       <div className="hero-container">
         <div className="hero-content">
-          <div className="hero-badge">
-            <span>🚀 Transforming Clinical Research in Saudi Arabia</span>
+          <div className="hero-logo-container">
+            <img 
+              src={process.env.PUBLIC_URL + '/images/evidance_logo_transparent.png'} 
+              alt="Evidance" 
+              className="hero-logo"
+            />
           </div>
           
           <h1 className="hero-title">
@@ -51,7 +55,7 @@ const Hero = () => {
             <a href="#section-1" className="btn btn-primary btn-large">
               Explore Our Vision
             </a>
-            <a href={process.env.PUBLIC_URL + "/join-us"} className="btn btn-secondary btn-large">
+            <a href="#/join-us" className="btn btn-secondary btn-large">
               Get Started Today
             </a>
           </div>
