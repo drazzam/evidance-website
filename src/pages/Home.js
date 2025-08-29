@@ -103,30 +103,30 @@ const Home = () => {
 
       <section id="section-3" className={`home-section research-impact ${visible['section-3'] ? 'visible' : ''}`}>
         <div className="container">
-          <div className="section-content">
-            <div className="section-text">
+          <div className="section-content-centered">
+            <div className="section-text-centered">
               <h2 className="section-title">Research Impact & Innovation</h2>
               <p className="section-description">
                 Our research initiatives focus on addressing critical healthcare challenges in Saudi Arabia 
                 and the broader region. Through collaborative partnerships and cutting-edge methodologies, 
                 we're driving meaningful change in clinical practice and patient outcomes.
               </p>
-              <div className="impact-highlights">
-                <div className="impact-item">
-                  <span className="impact-icon">🔬</span>
-                  <h4>Clinical Trials</h4>
-                  <p>Leading innovative clinical trials in multiple therapeutic areas</p>
-                </div>
-                <div className="impact-item">
-                  <span className="impact-icon">📊</span>
-                  <h4>Data Analytics</h4>
-                  <p>Leveraging advanced analytics for evidence-based insights</p>
-                </div>
-                <div className="impact-item">
-                  <span className="impact-icon">🤝</span>
-                  <h4>Collaborations</h4>
-                  <p>Strategic partnerships with leading academic institutions</p>
-                </div>
+            </div>
+            <div className="impact-highlights">
+              <div className="impact-item">
+                <span className="impact-icon">🔬</span>
+                <h4>Clinical Trials</h4>
+                <p>Leading innovative clinical trials in multiple therapeutic areas</p>
+              </div>
+              <div className="impact-item">
+                <span className="impact-icon">📊</span>
+                <h4>Data Analytics</h4>
+                <p>Leveraging advanced analytics for evidence-based insights</p>
+              </div>
+              <div className="impact-item">
+                <span className="impact-icon">🤝</span>
+                <h4>Collaborations</h4>
+                <p>Strategic partnerships with leading clinical researchers and academic consultants from different institutions in Saudi Arabia</p>
               </div>
             </div>
           </div>
@@ -157,7 +157,7 @@ const Home = () => {
         </div>
       </section>
 
-      <section id="section-5" className={`home-section join-us ${visible['section-5'] ? 'visible' : ''}`}>
+      <section id="section-5" className={`home-section join-us-section ${visible['section-5'] ? 'visible' : ''}`}>
         <div className="container">
           <div className="cta-section">
             <h2 className="cta-title">Join Us!</h2>
