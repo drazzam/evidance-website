@@ -1,21 +1,8 @@
-import React, { useState, useEffect } from 'react';
-import { Link, useLocation } from 'react-router-dom';
+import React, { useState } from 'react';
 import './Navbar.css';
 
 const Navbar = () => {
   const [isOpen, setIsOpen] = useState(false);
-  const [scrolled, setScrolled] = useState(false);
-  const location = useLocation();
-
-  useEffect(() => {
-    const handleScroll = () => {
-      const isScrolled = window.scrollY > 10;
-      setScrolled(isScrolled);
-    };
-
-    window.addEventListener('scroll', handleScroll);
-    return () => window.removeEventListener('scroll', handleScroll);
-  }, []);
 
   const toggleMenu = () => {
     setIsOpen(!isOpen);
@@ -26,74 +13,39 @@ const Navbar = () => {
   };
 
   return (
-    <nav className={`navbar ${scrolled ? 'navbar-scrolled' : ''}`}>
+    <nav className="navbar">
       <div className="navbar-container">
-        <Link to="/" className="navbar-logo" onClick={closeMenu}>
-          <span className="logo-text">Evidance</span>
-        </Link>
+        <a href="#/" className="navbar-brand" onClick={closeMenu}>
+          Evidance
+        </a>
         
-        <div className="menu-icon" onClick={toggleMenu}>
-          <div className={`hamburger ${isOpen ? 'active' : ''}`}>
-            <span></span>
-            <span></span>
-            <span></span>
-          </div>
-        </div>
+        <button className="navbar-toggle" onClick={toggleMenu}>
+          <span className="navbar-toggle-icon"></span>
+          <span className="navbar-toggle-icon"></span>
+          <span className="navbar-toggle-icon"></span>
+        </button>
         
-        <ul className={`nav-menu ${isOpen ? 'active' : ''}`}>
-          <li className="nav-item">
-            <Link 
-              to="/" 
-              className={`nav-links ${location.hash === '#/' || location.hash === '' ? 'active' : ''}`}
-              onClick={closeMenu}
-            >
-              Home
-            </Link>
+        <ul className={`navbar-menu ${isOpen ? 'active' : ''}`}>
+          <li className="navbar-item">
+            <a href="#/" className="navbar-link" onClick={closeMenu}>Home</a>
           </li>
-          <li className="nav-item">
-            <Link 
-              to="/who-we-are" 
-              className={`nav-links ${location.hash === '#/who-we-are' ? 'active' : ''}`}
-              onClick={closeMenu}
-            >
-              Who We Are
-            </Link>
+          <li className="navbar-item">
+            <a href="#/who-we-are" className="navbar-link" onClick={closeMenu}>Who We Are</a>
           </li>
-          <li className="nav-item">
-            <Link 
-              to="/aims-goals" 
-              className={`nav-links ${location.hash === '#/aims-goals' ? 'active' : ''}`}
-              onClick={closeMenu}
-            >
-              Aims & Goals
-            </Link>
+          <li className="navbar-item">
+            <a href="#/aims-goals" className="navbar-link" onClick={closeMenu}>Aims & Goals</a>
           </li>
-          <li className="nav-item">
-            <Link 
-              to="/success-record" 
-              className={`nav-links ${location.hash === '#/success-record' ? 'active' : ''}`}
-              onClick={closeMenu}
-            >
-              Success Record
-            </Link>
+          <li className="navbar-item">
+            <a href="#/success-record" className="navbar-link" onClick={closeMenu}>Success Record</a>
           </li>
-          <li className="nav-item">
-            <Link 
-              to="/visionary-model" 
-              className={`nav-links ${location.hash === '#/visionary-model' ? 'active' : ''}`}
-              onClick={closeMenu}
-            >
-              Visionary Model
-            </Link>
+          <li className="navbar-item">
+            <a href="#/visionary-model" className="navbar-link" onClick={closeMenu}>Visionary Model</a>
           </li>
-          <li className="nav-item">
-            <Link 
-              to="/join-us" 
-              className={`nav-links nav-links-cta ${location.hash === '#/join-us' ? 'active' : ''}`}
-              onClick={closeMenu}
-            >
-              Join Us
-            </Link>
+          <li className="navbar-item">
+            <a href="#/publications" className="navbar-link" onClick={closeMenu}>Publications</a>
+          </li>
+          <li className="navbar-item">
+            <a href="#/join-us" className="navbar-link navbar-cta" onClick={closeMenu}>Join Us</a>
           </li>
         </ul>
       </div>
