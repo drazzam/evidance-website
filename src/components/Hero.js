@@ -51,37 +51,30 @@ const Hero = () => {
             <a href="#section-1" className="btn btn-primary btn-large">
               Explore Our Vision
             </a>
-            <a href="/evidance-website/join-us" className="btn btn-secondary btn-large">
+            <a href={process.env.PUBLIC_URL + "/join-us"} className="btn btn-secondary btn-large">
               Get Started Today
             </a>
           </div>
           
           <div className="hero-stats">
             <div className="stat-item">
-              <h3>100+</h3>
+              <h3>50+</h3>
               <p>Research Projects</p>
             </div>
             <div className="stat-item">
-              <h3>500+</h3>
+              <h3>250+</h3>
               <p>Trained Researchers</p>
             </div>
             <div className="stat-item">
-              <h3>50+</h3>
+              <h3>25+</h3>
               <p>Published Papers</p>
             </div>
             <div className="stat-item">
               <h3>15+</h3>
-              <p>Partner Institutions</p>
+              <p>Accepted Papers</p>
             </div>
           </div>
         </div>
-      </div>
-      
-      <div className="hero-scroll">
-        <div className="scroll-indicator">
-          <span></span>
-        </div>
-        <p>Scroll to explore</p>
       </div>
     </section>
   );
