@@ -29,7 +29,7 @@ const Navbar = () => {
     <nav className={`navbar ${scrolled ? 'navbar-scrolled' : ''}`}>
       <div className="navbar-container">
         <Link to="/" className="navbar-logo" onClick={closeMenu}>
-          <img src="/evidance-website/images/evidance_logo.png" alt="Evidance" className="logo-img" />
+          <img src={process.env.PUBLIC_URL + '/images/evidance_logo_transparent.png'} alt="Evidance" className="logo-img" />
           <span className="logo-text">Evidance</span>
         </Link>
         
