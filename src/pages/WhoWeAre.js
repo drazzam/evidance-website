@@ -1,39 +1,27 @@
 import React, { useState, useEffect } from 'react';
+import { db } from '../firebase';
+import { doc, onSnapshot } from 'firebase/firestore';
 
 const WhoWeAre = () => {
   const [content, setContent] = useState({
     storyTitle: 'Our Story',
-    storyContent: 'Evidance is a pioneering modified clinical research organization in Saudi Arabia, dedicated to bridging the gap between theoretical knowledge and practical research experience. We are committed to advancing healthcare research in alignment with Saudi Arabia\'s Vision 2030.',
+    storyContent: 'Loading...',
     teamTitle: 'Our Team',
-    teamContent: 'Our team consists of experienced clinical researchers, healthcare professionals, and education specialists dedicated to nurturing the next generation of clinical researchers.',
+    teamContent: 'Loading...',
     valuesTitle: 'Our Values',
-    valuesContent: 'Excellence, Innovation, Collaboration, and Impact drive everything we do at Evidance.'
+    valuesContent: 'Loading...'
   });
 
   useEffect(() => {
-    const savedContent = localStorage.getItem('whoWeAreContent');
-    if (savedContent) {
-      try {
-        setContent(JSON.parse(savedContent));
-      } catch (error) {
-        console.error('Error loading content:', error);
+    const unsubscribe = onSnapshot(doc(db, 'content', 'whoWeAre'), (doc) => {
+      if (doc.exists()) {
+        setContent(doc.data());
       }
-    }
+    }, (error) => {
+      console.error('Error fetching content:', error);
+    });
 
-    // Listen for storage changes
-    const handleStorageChange = () => {
-      const updatedContent = localStorage.getItem('whoWeAreContent');
-      if (updatedContent) {
-        try {
-          setContent(JSON.parse(updatedContent));
-        } catch (error) {
-          console.error('Error updating content:', error);
-        }
-      }
-    };
-
-    window.addEventListener('storage', handleStorageChange);
-    return () => window.removeEventListener('storage', handleStorageChange);
+    return () => unsubscribe();
   }, []);
 
   return (
