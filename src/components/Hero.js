@@ -1,6 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { db } from '../firebase';
-import { doc, onSnapshot } from 'firebase/firestore';
+import dataService from '../services/dataService';
 import './Hero.css';
 
 const Hero = () => {
@@ -8,7 +7,7 @@ const Hero = () => {
   const [heroData, setHeroData] = useState({
     title1: 'Advancing Healthcare Through',
     title2: 'Innovative Research',
-    subtitle: "Join Evidance, Saudi Arabia's pioneering modified clinical research organization, where healthcare students and practitioners gain hands-on research experience leading to published work.",
+    subtitle: "Join Evidance, Saudi Arabia's pioneering modified clinical research organization",
     stat1Number: '50+',
     stat1Text: 'Research Projects',
     stat2Number: '250+',
@@ -22,21 +21,32 @@ const Hero = () => {
   useEffect(() => {
     setLoaded(true);
     
-    // Real-time listener for Firebase updates
-    const unsubscribe = onSnapshot(doc(db, 'content', 'heroContent'), 
-      (doc) => {
-        if (doc.exists()) {
-          setHeroData(doc.data());
-        }
-      },
-      (error) => {
-        console.error('Error fetching hero content:', error);
-        // Fallback to default values if Firebase fails
+    const loadHeroContent = async () => {
+      // Check local cache first
+      const cached = localStorage.getItem('heroContent');
+      if (cached) {
+        try {
+          setHeroData(JSON.parse(cached));
+        } catch (e) {}
       }
-    );
 
-    // Cleanup listener on component unmount
-    return () => unsubscribe();
+      // Load from global database
+      try {
+        const data = await dataService.loadData();
+        if (data && data.heroContent) {
+          setHeroData(data.heroContent);
+          localStorage.setItem('heroContent', JSON.stringify(data.heroContent));
+        }
+      } catch (error) {
+        console.error('Error loading hero content:', error);
+      }
+    };
+
+    loadHeroContent();
+    
+    // Refresh every 30 seconds
+    const interval = setInterval(loadHeroContent, 30000);
+    return () => clearInterval(interval);
   }, []);
 
   return (
