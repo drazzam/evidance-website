@@ -185,3 +185,39 @@
     justify-content: center;
   }
 }
+
+.vision-2030-container {
+  margin-top: 20px;
+  display: flex;
+  align-items: center;
+}
+
+.vision-logo {
+  height: 80px;
+  width: auto;
+  object-fit: contain;
+  opacity: 0.9;
+  transition: opacity 0.3s ease;
+}
+
+.vision-logo:hover {
+  opacity: 1;
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+  .vision-logo {
+    height: 60px;
+  }
+}
+
+@media (max-width: 480px) {
+  .vision-logo {
+    height: 50px;
+  }
+  
+  .vision-2030-container {
+    justify-content: center;
+    margin-top: 15px;
+  }
+}
