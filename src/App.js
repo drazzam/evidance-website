@@ -9,6 +9,8 @@ import AimsGoals from './pages/AimsGoals';
 import SuccessRecord from './pages/SuccessRecord';
 import VisionaryModel from './pages/VisionaryModel';
 import JoinUs from './pages/JoinUs';
+import Publications from './pages/Publications';
+import Admin from './pages/Admin';
 
 function App() {
   return (
@@ -22,6 +24,8 @@ function App() {
           <Route path="/success-record" element={<SuccessRecord />} />
           <Route path="/visionary-model" element={<VisionaryModel />} />
           <Route path="/join-us" element={<JoinUs />} />
+          <Route path="/publications" element={<Publications />} />
+          <Route path="/admin-panel-2024" element={<Admin />} />
         </Routes>
         <Footer />
       </div>
