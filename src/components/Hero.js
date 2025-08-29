@@ -3,9 +3,48 @@ import './Hero.css';
 
 const Hero = () => {
   const [loaded, setLoaded] = useState(false);
+  const [heroData, setHeroData] = useState({
+    title1: 'Advancing Healthcare Through',
+    title2: 'Innovative Research',
+    subtitle: "Join Evidance, Saudi Arabia's pioneering modified clinical research organization, where healthcare students and practitioners gain hands-on research experience leading to published work.",
+    stat1Number: '50+',
+    stat1Text: 'Research Projects',
+    stat2Number: '250+',
+    stat2Text: 'Trained Researchers',
+    stat3Number: '25+',
+    stat3Text: 'Published Papers',
+    stat4Number: '15+',
+    stat4Text: 'Accepted Papers'
+  });
 
   useEffect(() => {
     setLoaded(true);
+    
+    // Load hero content from localStorage
+    const savedHero = localStorage.getItem('heroContent');
+    if (savedHero) {
+      try {
+        const parsedHero = JSON.parse(savedHero);
+        setHeroData(parsedHero);
+      } catch (error) {
+        console.error('Error loading hero content:', error);
+      }
+    }
+
+    // Listen for storage changes
+    const handleStorageChange = () => {
+      const updatedHero = localStorage.getItem('heroContent');
+      if (updatedHero) {
+        try {
+          setHeroData(JSON.parse(updatedHero));
+        } catch (error) {
+          console.error('Error updating hero content:', error);
+        }
+      }
+    };
+
+    window.addEventListener('storage', handleStorageChange);
+    return () => window.removeEventListener('storage', handleStorageChange);
   }, []);
 
   return (
@@ -26,14 +65,12 @@ const Hero = () => {
           </div>
           
           <h1 className="hero-title">
-            Advancing Healthcare Through
-            <span className="text-gradient"> Innovative Research</span>
+            {heroData.title1}
+            <span className="text-gradient"> {heroData.title2}</span>
           </h1>
           
           <p className="hero-subtitle">
-            Join Evidance, Saudi Arabia's pioneering modified clinical research organization, 
-            where healthcare students and practitioners gain hands-on research experience 
-            leading to published work.
+            {heroData.subtitle}
           </p>
           
           <div className="hero-features">
@@ -62,20 +99,20 @@ const Hero = () => {
           
           <div className="hero-stats">
             <div className="stat-item">
-              <h3>50+</h3>
-              <p>Research Projects</p>
+              <h3>{heroData.stat1Number}</h3>
+              <p>{heroData.stat1Text}</p>
             </div>
             <div className="stat-item">
-              <h3>250+</h3>
-              <p>Trained Researchers</p>
+              <h3>{heroData.stat2Number}</h3>
+              <p>{heroData.stat2Text}</p>
             </div>
             <div className="stat-item">
-              <h3>25+</h3>
-              <p>Published Papers</p>
+              <h3>{heroData.stat3Number}</h3>
+              <p>{heroData.stat3Text}</p>
             </div>
             <div className="stat-item">
-              <h3>15+</h3>
-              <p>Accepted Papers</p>
+              <h3>{heroData.stat4Number}</h3>
+              <p>{heroData.stat4Text}</p>
             </div>
           </div>
         </div>
