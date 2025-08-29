@@ -1,26 +1,232 @@
+/* Hero Section Styles */
+.hero {
+  min-height: 120vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 100px 20px 80px;
+  background: linear-gradient(135deg, 
+    rgba(23, 42, 98, 0.02) 0%, 
+    rgba(144, 19, 254, 0.02) 100%),
+    linear-gradient(135deg, 
+    rgba(255, 255, 255, 0.95) 0%, 
+    rgba(243, 244, 246, 0.95) 100%);
+}
+
+.hero-container {
+  max-width: 1200px;
+  margin: 0 auto;
+  width: 100%;
+  z-index: 1;
+}
+
+.hero-content {
+  text-align: center;
+  animation: fadeInUp 1s ease 0.3s both;
+}
+
+.hero-logo-container {
+  display: flex;
+  justify-content: center;
+  margin-bottom: 60px;
+  animation: fadeInUp 1s ease 0.2s both;
+}
+
+/* 4X LARGER LOGO - Original was ~100-120px, now 450px */
 .hero-logo {
-  height: 400px;  /* 4x larger than original 100px */
+  height: 450px;
   width: auto;
+  max-width: 85vw;
   object-fit: contain;
-  filter: drop-shadow(0 10px 20px rgba(0, 0, 0, 0.2));
+  filter: drop-shadow(0 20px 40px rgba(0, 0, 0, 0.15));
   transition: transform 0.3s ease;
-  margin-bottom: 50px;
+}
+
+.hero-logo:hover {
+  transform: scale(1.02);
+}
+
+.hero-title {
+  font-size: 3.5rem;
+  font-weight: 800;
+  margin-bottom: 1.5rem;
+  line-height: 1.2;
+}
+
+.title-line {
+  display: block;
+  margin-bottom: 0.5rem;
+}
+
+.primary-gradient {
+  background: linear-gradient(135deg, var(--primary-blue) 0%, #9013FE 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+.hero-subtitle {
+  font-size: 1.25rem;
+  color: var(--text-secondary);
+  max-width: 800px;
+  margin: 0 auto 3rem;
+  line-height: 1.6;
+}
+
+.hero-stats {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+  gap: 2rem;
+  max-width: 700px;
+  margin: 0 auto 3rem;
+}
+
+.stat-item {
+  text-align: center;
+  padding: 1.5rem;
+  background: white;
+  border-radius: 16px;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.08);
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.stat-item:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 15px 40px rgba(0, 0, 0, 0.12);
+}
+
+.stat-number {
+  display: block;
+  font-size: 2.5rem;
+  font-weight: 800;
+  background: linear-gradient(135deg, var(--primary-blue) 0%, #9013FE 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  margin-bottom: 0.5rem;
+}
+
+.stat-text {
+  font-size: 0.95rem;
+  color: var(--text-secondary);
+  font-weight: 500;
+}
+
+.hero-actions {
+  display: flex;
+  gap: 1.5rem;
+  justify-content: center;
+  flex-wrap: wrap;
+}
+
+.btn {
+  padding: 1rem 2rem;
+  font-size: 1.1rem;
+  font-weight: 600;
+  border-radius: 50px;
+  text-decoration: none;
+  transition: all 0.3s ease;
+  display: inline-block;
+  border: none;
+  cursor: pointer;
+}
+
+.btn-primary {
+  background: linear-gradient(135deg, var(--primary-blue) 0%, #9013FE 100%);
+  color: white;
+  box-shadow: 0 10px 30px rgba(35, 63, 146, 0.3);
+}
+
+.btn-primary:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 15px 40px rgba(35, 63, 146, 0.4);
+}
+
+.btn-secondary {
+  background: white;
+  color: var(--primary-blue);
+  border: 2px solid var(--primary-blue);
+}
+
+.btn-secondary:hover {
+  background: var(--primary-blue);
+  color: white;
+  transform: translateY(-2px);
+}
+
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(30px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* Responsive adjustments for 4x larger logo */
+@media (max-width: 1400px) {
+  .hero-logo {
+    height: 400px;
+  }
+}
+
+@media (max-width: 1200px) {
+  .hero-logo {
+    height: 350px;
+  }
+  .hero {
+    min-height: 110vh;
+  }
+  .hero-title {
+    font-size: 3rem;
+  }
 }
 
 @media (max-width: 968px) {
   .hero-logo {
-    height: 320px;
+    height: 300px;
+  }
+  .hero {
+    min-height: 100vh;
+  }
+  .hero-title {
+    font-size: 2.5rem;
+  }
+  .hero-subtitle {
+    font-size: 1.1rem;
   }
 }
 
 @media (max-width: 640px) {
   .hero-logo {
-    height: 240px;
+    height: 250px;
+  }
+  .hero-title {
+    font-size: 2rem;
+  }
+  .hero-subtitle {
+    font-size: 1rem;
+  }
+  .stat-number {
+    font-size: 2rem;
   }
 }
 
 @media (max-width: 480px) {
   .hero-logo {
-    height: 180px;
+    height: 200px;
+  }
+  .hero-title {
+    font-size: 1.75rem;
+  }
+  .hero-actions {
+    flex-direction: column;
+    width: 100%;
+  }
+  .btn {
+    width: 100%;
+    text-align: center;
   }
 }
