@@ -1,27 +1,43 @@
 import React, { useState, useEffect } from 'react';
-import { db } from '../firebase';
-import { doc, onSnapshot } from 'firebase/firestore';
+import dataService from '../services/dataService';
 
 const WhoWeAre = () => {
   const [content, setContent] = useState({
     storyTitle: 'Our Story',
-    storyContent: 'Loading...',
+    storyContent: 'Loading content...',
     teamTitle: 'Our Team',
-    teamContent: 'Loading...',
+    teamContent: 'Loading content...',
     valuesTitle: 'Our Values',
-    valuesContent: 'Loading...'
+    valuesContent: 'Loading content...'
   });
 
   useEffect(() => {
-    const unsubscribe = onSnapshot(doc(db, 'content', 'whoWeAre'), (doc) => {
-      if (doc.exists()) {
-        setContent(doc.data());
+    const loadContent = async () => {
+      // First try local cache for instant load
+      const cached = localStorage.getItem('whoWeAreContent');
+      if (cached) {
+        try {
+          setContent(JSON.parse(cached));
+        } catch (e) {}
       }
-    }, (error) => {
-      console.error('Error fetching content:', error);
-    });
 
-    return () => unsubscribe();
+      // Then fetch from global database
+      try {
+        const data = await dataService.loadData();
+        if (data && data.whoWeAre) {
+          setContent(data.whoWeAre);
+          localStorage.setItem('whoWeAreContent', JSON.stringify(data.whoWeAre));
+        }
+      } catch (error) {
+        console.error('Error loading global content:', error);
+      }
+    };
+
+    loadContent();
+    
+    // Refresh every 20 seconds for live updates
+    const interval = setInterval(loadContent, 20000);
+    return () => clearInterval(interval);
   }, []);
 
   return (
@@ -34,15 +50,15 @@ const WhoWeAre = () => {
         <div className="container">
           <div className="content-section">
             <h2>{content.storyTitle}</h2>
-            <p>{content.storyContent}</p>
+            <p>{content.storyContent || 'Content will appear here once updated via admin panel.'}</p>
           </div>
           <div className="content-section">
             <h2>{content.teamTitle}</h2>
-            <p>{content.teamContent}</p>
+            <p>{content.teamContent || 'Content will appear here once updated via admin panel.'}</p>
           </div>
           <div className="content-section">
             <h2>{content.valuesTitle}</h2>
-            <p>{content.valuesContent}</p>
+            <p>{content.valuesContent || 'Content will appear here once updated via admin panel.'}</p>
           </div>
         </div>
       </div>
