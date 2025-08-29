@@ -1,4 +1,6 @@
 import React, { useEffect, useState } from 'react';
+import { db } from '../firebase';
+import { doc, onSnapshot } from 'firebase/firestore';
 import './Hero.css';
 
 const Hero = () => {
@@ -20,31 +22,21 @@ const Hero = () => {
   useEffect(() => {
     setLoaded(true);
     
-    // Load hero content from localStorage
-    const savedHero = localStorage.getItem('heroContent');
-    if (savedHero) {
-      try {
-        const parsedHero = JSON.parse(savedHero);
-        setHeroData(parsedHero);
-      } catch (error) {
-        console.error('Error loading hero content:', error);
-      }
-    }
-
-    // Listen for storage changes
-    const handleStorageChange = () => {
-      const updatedHero = localStorage.getItem('heroContent');
-      if (updatedHero) {
-        try {
-          setHeroData(JSON.parse(updatedHero));
-        } catch (error) {
-          console.error('Error updating hero content:', error);
+    // Real-time listener for Firebase updates
+    const unsubscribe = onSnapshot(doc(db, 'content', 'heroContent'), 
+      (doc) => {
+        if (doc.exists()) {
+          setHeroData(doc.data());
         }
+      },
+      (error) => {
+        console.error('Error fetching hero content:', error);
+        // Fallback to default values if Firebase fails
       }
-    };
+    );
 
-    window.addEventListener('storage', handleStorageChange);
-    return () => window.removeEventListener('storage', handleStorageChange);
+    // Cleanup listener on component unmount
+    return () => unsubscribe();
   }, []);
 
   return (
