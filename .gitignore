@@ -39,3 +39,18 @@ Thumbs.db
 .Spotlight-V100
 .Trashes
 ehthumbs.db
+
+# API Keys - NEVER commit these
+.env.local
+.env
+src/config/jsonbin.js
+
+# Dependencies
+node_modules/
+
+# Production
+build/
+
+# Misc
+.DS_Store
+npm-debug.log*
