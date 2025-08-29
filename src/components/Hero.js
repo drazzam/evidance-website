@@ -77,7 +77,7 @@ const Hero = () => {
       <div className="hero-container">
         <div className="hero-logo-container">
           <img 
-            src="/images/evidance_logo_transparent.png" 
+            src={`${process.env.PUBLIC_URL}/images/evidance_logo_transparent.png`}
             alt="Evidance Logo" 
             className="hero-logo"
           />
