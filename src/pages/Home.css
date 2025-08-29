@@ -53,6 +53,128 @@
   margin-bottom: 32px;
 }
 
+/* Publications Carousel */
+.publications-carousel {
+  position: relative;
+  width: 100%;
+  overflow: hidden;
+  border-radius: 20px;
+  box-shadow: var(--shadow-xl);
+}
+
+.carousel-container {
+  position: relative;
+  width: 100%;
+  height: 400px;
+}
+
+.carousel-track {
+  display: flex;
+  gap: 20px;
+  overflow-x: auto;
+  scroll-behavior: smooth;
+  scrollbar-width: none;
+  height: 100%;
+  align-items: center;
+  padding: 0 20px;
+}
+
+.carousel-track::-webkit-scrollbar {
+  display: none;
+}
+
+.publication-slide {
+  min-width: 280px;
+  height: 350px;
+  background: white;
+  border-radius: 16px;
+  overflow: hidden;
+  box-shadow: var(--shadow-md);
+  transition: transform 0.3s ease;
+}
+
+.publication-slide:hover {
+  transform: scale(1.05);
+}
+
+.publication-slide img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.carousel-btn {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  background: rgba(30, 58, 138, 0.9);
+  color: white;
+  border: none;
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  font-size: 24px;
+  cursor: pointer;
+  z-index: 2;
+  transition: all 0.3s ease;
+}
+
+.carousel-btn:hover {
+  background: var(--primary-blue);
+  transform: translateY(-50%) scale(1.1);
+}
+
+.carousel-btn.prev {
+  left: 10px;
+}
+
+.carousel-btn.next {
+  right: 10px;
+}
+
+/* Research Impact Section */
+.research-impact {
+  background: white;
+}
+
+.impact-highlights {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 30px;
+  margin-top: 40px;
+}
+
+.impact-item {
+  text-align: center;
+  padding: 30px;
+  background: var(--light-gray);
+  border-radius: 16px;
+  transition: all 0.3s ease;
+}
+
+.impact-item:hover {
+  transform: translateY(-5px);
+  box-shadow: var(--shadow-lg);
+}
+
+.impact-icon {
+  font-size: 48px;
+  display: block;
+  margin-bottom: 16px;
+}
+
+.impact-item h4 {
+  font-size: 20px;
+  color: var(--primary-blue);
+  margin-bottom: 12px;
+}
+
+.impact-item p {
+  font-size: 14px;
+  color: var(--text-secondary);
+  margin: 0;
+}
+
 .section-image {
   position: relative;
   height: 400px;
@@ -68,40 +190,12 @@
   box-shadow: var(--shadow-xl);
 }
 
-.research-team {
-  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-}
-
-.research-team::before {
-  content: '👥';
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
-  font-size: 120px;
-  opacity: 0.3;
-}
-
 .goals-vision {
   background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
 }
 
 .goals-vision::before {
   content: '🎯';
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
-  font-size: 120px;
-  opacity: 0.3;
-}
-
-.success-metrics {
-  background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
-}
-
-.success-metrics::before {
-  content: '📊';
   position: absolute;
   top: 50%;
   left: 50%;
@@ -125,7 +219,7 @@
 }
 
 .join-us {
-  background: var(--gradient-primary);
+  background: var(--primary-blue);
   color: var(--white);
 }
 
@@ -162,6 +256,17 @@
   gap: 20px;
   justify-content: center;
   flex-wrap: wrap;
+}
+
+.btn-secondary-white {
+  background: var(--white);
+  color: var(--primary-blue);
+  border: 2px solid var(--white);
+}
+
+.btn-secondary-white:hover {
+  background: transparent;
+  color: var(--white);
 }
 
 .vision-2030-section {
@@ -216,8 +321,8 @@
     direction: ltr;
   }
 
-  .section-image {
-    height: 300px;
+  .impact-highlights {
+    grid-template-columns: 1fr;
   }
 
   .vision-content {
@@ -228,6 +333,15 @@
 
   .vision-logo {
     width: 250px;
+  }
+
+  .carousel-container {
+    height: 300px;
+  }
+
+  .publication-slide {
+    min-width: 240px;
+    height: 280px;
   }
 }
 
@@ -250,10 +364,6 @@
 
   .cta-description {
     font-size: 18px;
-  }
-
-  .section-image {
-    height: 250px;
   }
 
   .vision-logo {
