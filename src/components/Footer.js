@@ -17,17 +17,6 @@ const Footer = () => {
           </div>
 
           <div className="footer-section">
-            <h3 className="footer-title">Quick Links</h3>
-            <ul className="footer-links">
-              <li><a href="/evidance-website/who-we-are">Who We Are</a></li>
-              <li><a href="/evidance-website/aims-goals">Aims & Goals</a></li>
-              <li><a href="/evidance-website/success-record">Success Record</a></li>
-              <li><a href="/evidance-website/visionary-model">Visionary Model</a></li>
-              <li><a href="/evidance-website/join-us">Join Us</a></li>
-            </ul>
-          </div>
-
-          <div className="footer-section">
             <h3 className="footer-title">Get in Touch</h3>
             <p className="footer-contact">
               Ready to advance your research career? 
