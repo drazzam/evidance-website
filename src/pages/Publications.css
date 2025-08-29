@@ -1,128 +1,28 @@
+/* Publications Page Styles */
 .publications-page {
   min-height: 100vh;
-  padding-top: 80px;
+  padding-bottom: 60px;
 }
 
-.page-header {
-  background: var(--gradient-primary);
-  color: white;
-  padding: 80px 20px;
-  text-align: center;
-}
-
-.page-header h1 {
-  font-size: 48px;
-  margin-bottom: 16px;
-  color: white;
-}
-
-.page-header p {
-  font-size: 20px;
-  opacity: 0.95;
-  color: white;
-}
-
-.publication-section {
-  padding: 80px 0;
-}
-
-.publication-section.alt-bg {
-  background: #f8f9fa;
-}
-
-.section-title {
-  text-align: center;
-  font-size: 36px;
-  color: var(--primary-blue);
-  margin-bottom: 16px;
-}
-
-.section-subtitle {
-  text-align: center;
-  font-size: 18px;
-  color: var(--text-secondary);
-  margin-bottom: 50px;
-  max-width: 700px;
-  margin-left: auto;
-  margin-right: auto;
-}
-
-.gallery-container {
-  position: relative;
-  max-width: 1200px;
-  margin: 0 auto;
-  padding: 0 60px;
-}
-
-.gallery-track {
-  display: flex;
-  gap: 20px;
-  overflow-x: auto;
-  scroll-behavior: smooth;
-  scrollbar-width: none;
-  padding: 20px 0;
-}
-
-.gallery-track::-webkit-scrollbar {
-  display: none;
-}
-
-.gallery-item {
-  min-width: 300px;
-  height: 400px;
-  position: relative;
-  overflow: hidden;
-  border-radius: 16px;
-  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
-  transition: transform 0.3s ease;
-}
-
-.gallery-item:hover {
-  transform: scale(1.05);
-}
-
-.gallery-item img {
+.publication-image-container {
   width: 100%;
-  height: 100%;
-  object-fit: cover;
+  height: 250px;
+  background: var(--background-light);
+  overflow: hidden;
 }
 
-.item-overlay {
-  position: absolute;
-  bottom: 0;
-  left: 0;
-  right: 0;
-  background: linear-gradient(to top, rgba(0,0,0,0.8), transparent);
-  color: white;
+.publication-content {
   padding: 20px;
-  text-align: center;
 }
 
-.gallery-btn {
-  position: absolute;
-  top: 50%;
-  transform: translateY(-50%);
-  background: var(--primary-blue);
-  color: white;
-  border: none;
-  width: 50px;
-  height: 50px;
-  border-radius: 50%;
-  font-size: 28px;
-  cursor: pointer;
-  z-index: 2;
-  transition: all 0.3s ease;
+.publication-title {
+  color: var(--primary-blue);
+  font-size: 1.3rem;
+  margin-bottom: 10px;
 }
 
-.gallery-btn:hover {
-  background: var(--secondary-blue);
-  transform: translateY(-50%) scale(1.1);
-}
-
-.gallery-btn.prev {
-  left: 10px;
-}
-
-.gallery-btn.next {
-  right: 10px;
+.publication-description {
+  color: var(--text-secondary);
+  line-height: 1.6;
+  margin-bottom: 20px;
 }
