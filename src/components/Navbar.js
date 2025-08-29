@@ -29,7 +29,6 @@ const Navbar = () => {
     <nav className={`navbar ${scrolled ? 'navbar-scrolled' : ''}`}>
       <div className="navbar-container">
         <Link to="/" className="navbar-logo" onClick={closeMenu}>
-          <img src={process.env.PUBLIC_URL + '/images/evidance_logo_transparent.png'} alt="Evidance" className="logo-img" />
           <span className="logo-text">Evidance</span>
         </Link>
         
@@ -45,7 +44,7 @@ const Navbar = () => {
           <li className="nav-item">
             <Link 
               to="/" 
-              className={`nav-links ${location.pathname === '/' ? 'active' : ''}`}
+              className={`nav-links ${location.hash === '#/' || location.hash === '' ? 'active' : ''}`}
               onClick={closeMenu}
             >
               Home
@@ -54,7 +53,7 @@ const Navbar = () => {
           <li className="nav-item">
             <Link 
               to="/who-we-are" 
-              className={`nav-links ${location.pathname === '/who-we-are' ? 'active' : ''}`}
+              className={`nav-links ${location.hash === '#/who-we-are' ? 'active' : ''}`}
               onClick={closeMenu}
             >
               Who We Are
@@ -63,7 +62,7 @@ const Navbar = () => {
           <li className="nav-item">
             <Link 
               to="/aims-goals" 
-              className={`nav-links ${location.pathname === '/aims-goals' ? 'active' : ''}`}
+              className={`nav-links ${location.hash === '#/aims-goals' ? 'active' : ''}`}
               onClick={closeMenu}
             >
               Aims & Goals
@@ -72,7 +71,7 @@ const Navbar = () => {
           <li className="nav-item">
             <Link 
               to="/success-record" 
-              className={`nav-links ${location.pathname === '/success-record' ? 'active' : ''}`}
+              className={`nav-links ${location.hash === '#/success-record' ? 'active' : ''}`}
               onClick={closeMenu}
             >
               Success Record
@@ -81,7 +80,7 @@ const Navbar = () => {
           <li className="nav-item">
             <Link 
               to="/visionary-model" 
-              className={`nav-links ${location.pathname === '/visionary-model' ? 'active' : ''}`}
+              className={`nav-links ${location.hash === '#/visionary-model' ? 'active' : ''}`}
               onClick={closeMenu}
             >
               Visionary Model
@@ -90,7 +89,7 @@ const Navbar = () => {
           <li className="nav-item">
             <Link 
               to="/join-us" 
-              className={`nav-links nav-links-cta ${location.pathname === '/join-us' ? 'active' : ''}`}
+              className={`nav-links nav-links-cta ${location.hash === '#/join-us' ? 'active' : ''}`}
               onClick={closeMenu}
             >
               Join Us
