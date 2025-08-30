@@ -4,901 +4,471 @@ import './Admin.css';
 
 const Admin = () => {
   const [isAuthenticated, setIsAuthenticated] = useState(false);
-  const [loading, setLoading] = useState(false);
-  const [saveStatus, setSaveStatus] = useState('');
-  const [credentials, setCredentials] = useState({ username: '', password: '' });
   const [githubToken, setGithubToken] = useState('');
-  const [showTokenSetup, setShowTokenSetup] = useState(false);
-  const [activeTab, setActiveTab] = useState('content');
-  
-  // Who We Are page structured content
-  const [whoWeAre, setWhoWeAre] = useState({
-    storyTitle: 'Our Story',
-    storyContent: '',
-    teamTitle: 'Our Team',
-    teamContent: '',
-    valuesTitle: 'Our Values',
-    valuesContent: ''
-  });
+  const [isSaving, setIsSaving] = useState(false);
+  const [saveStatus, setSaveStatus] = useState('');
+  const [lastSaved, setLastSaved] = useState(null);
 
-  // Aims & Goals page structured content
-  const [aimsGoals, setAimsGoals] = useState({
-    objectivesTitle: 'Primary Objectives',
-    objectivesContent: '',
-    goalsTitle: 'Strategic Goals',
-    goalsContent: '',
-    visionTitle: 'Future Vision',
-    visionContent: ''
-  });
-
-  // Success Record page structured content
-  const [successRecord, setSuccessRecord] = useState({
-    achievementsTitle: 'Key Achievements',
-    achievementsContent: '',
-    publicationsTitle: 'Research Publications',
-    publicationsContent: '',
-    storiesTitle: 'Success Stories',
-    storiesContent: ''
-  });
-
-  // Visionary Model page structured content
-  const [visionaryModel, setVisionaryModel] = useState({
-    approachTitle: 'Modified CRO Approach',
-    approachContent: '',
-    frameworkTitle: 'Innovation Framework',
-    frameworkContent: '',
-    platformTitle: 'Digital Platform',
-    platformContent: ''
-  });
-
-  // Join Us page content
-  const [joinUs, setJoinUs] = useState({
-    title: 'Join Our Research Community',
-    content: '',
-    contactInfo: ''
-  });
-
-  // Hero section state
-  const [heroContent, setHeroContent] = useState({
-    title1: 'Advancing Healthcare Through',
-    title2: 'Innovative Research',
-    subtitle: "Join Evidance, Saudi Arabia's pioneering modified clinical research organization, where healthcare students and practitioners gain hands-on research experience leading to published work.",
-    stat1Number: '50+',
-    stat1Text: 'Research Projects',
-    stat2Number: '250+',
-    stat2Text: 'Trained Researchers',
-    stat3Number: '25+',
-    stat3Text: 'Published Papers',
-    stat4Number: '15+',
-    stat4Text: 'Accepted Papers'
-  });
-
-  // Home sections state
-  const [homeSections, setHomeSections] = useState({
-    publicationsTitle: 'Recent Publications',
-    publicationsText: 'Explore our latest research publications and contributions to medical science.',
-    aimsTitle: 'What Are Our Aims and Goals?',
-    aimsText: 'We are committed to advancing clinical research in Saudi Arabia.',
-    researchTitle: 'Research Impact & Innovation',
-    researchText: 'Our research has contributed to significant advancements in healthcare.',
-    visionaryTitle: 'Our Visionary Model',
-    visionaryText: 'Our unique modified CRO model combines excellence with innovation.',
-    joinUsTitle: 'Join Us!',
-    joinUsText: 'Become part of Saudi Arabia\'s leading clinical research community.'
-  });
-
-  // Publications state
-  const [publications, setPublications] = useState([
-    { id: 1, image: '', title: 'Research Publication 1', description: 'Description of publication 1' },
-    { id: 2, image: '', title: 'Research Publication 2', description: 'Description of publication 2' },
-    { id: 3, image: '', title: 'Research Publication 3', description: 'Description of publication 3' },
-    { id: 4, image: '', title: 'Research Publication 4', description: 'Description of publication 4' },
-    { id: 5, image: '', title: 'Research Publication 5', description: 'Description of publication 5' },
-    { id: 6, image: '', title: 'Research Publication 6', description: 'Description of publication 6' }
-  ]);
-
-  // Contact info state
-  const [contactInfo, setContactInfo] = useState({
-    email: 'info@evidance.com',
-    phone: '+966 54 945 0781',
-    address: 'Riyadh, Kingdom of Saudi Arabia'
-  });
-
-  // Load data from GitHub
-  const loadFromGitHub = async () => {
-    try {
-      setLoading(true);
-      console.log('Loading from GitHub...');
-      
-      const data = await githubDataService.loadData();
-      
-      if (data) {
-        if (data.whoWeAre) setWhoWeAre(data.whoWeAre);
-        if (data.aimsGoals) setAimsGoals(data.aimsGoals);
-        if (data.successRecord) setSuccessRecord(data.successRecord);
-        if (data.visionaryModel) setVisionaryModel(data.visionaryModel);
-        if (data.joinUs) setJoinUs(data.joinUs);
-        if (data.heroContent) setHeroContent(data.heroContent);
-        if (data.homeSections) setHomeSections(data.homeSections);
-        if (data.publications) setPublications(data.publications);
-        if (data.contactInfo) setContactInfo(data.contactInfo);
-        
-        console.log('Data loaded successfully');
+  // Content state
+  const [content, setContent] = useState({
+    whoWeAre: {
+      storyTitle: 'Our Story',
+      storyContent: 'Evidance is Saudi Arabia\'s pioneering modified clinical research organization, established to bridge the gap between academic knowledge and practical research experience.',
+      teamTitle: 'Our Team',
+      teamContent: 'Our team consists of experienced researchers, healthcare professionals, and educators dedicated to advancing clinical research in the Kingdom.',
+      valuesTitle: 'Our Values',
+      valuesContent: 'We are committed to advancing clinical research in Saudi Arabia by providing comprehensive research education, facilitating innovative studies, and building a community of skilled healthcare researchers.'
+    },
+    aimsGoals: {
+      objectivesTitle: 'Our Objectives',
+      objectivesContent: 'We strive to advance evidence-based research methodologies by developing innovative tools and frameworks that enhance the quality and reliability of scientific inquiry across diverse fields.',
+      goalsTitle: 'Our Goals',
+      goalsContent: 'Our primary goals include establishing robust research standards, fostering collaboration among researchers, and creating accessible resources that promote evidence-based decision making in academia and industry.',
+      visionTitle: 'Our Vision',
+      visionContent: 'We envision a future where evidence-based research is the standard across all disciplines, where researchers have access to cutting-edge tools and methodologies, and where scientific findings drive positive change in society.'
+    },
+    successRecord: {
+      achievementsTitle: 'Our Achievements',
+      achievementsContent: 'Over the years, we have successfully completed numerous research projects, contributing to significant advancements in evidence-based methodologies and establishing new standards for research excellence.',
+      publicationsTitle: 'Publications & Research',
+      publicationsContent: 'Our team has published extensively in peer-reviewed journals, presenting our findings at international conferences, and contributing to the global research community through high-impact publications.',
+      storiesTitle: 'Success Stories',
+      storiesContent: 'We have partnered with leading institutions and organizations to implement evidence-based solutions, resulting in improved outcomes, enhanced methodologies, and measurable positive impacts across various sectors.'
+    },
+    visionaryModel: {
+      approachTitle: 'Our Approach',
+      approachContent: 'Our unique modified CRO model combines traditional clinical research excellence with innovative educational approaches, creating opportunities for healthcare professionals to engage in meaningful research while maintaining their clinical practice.',
+      frameworkTitle: 'Our Framework',
+      frameworkContent: 'We have developed a comprehensive framework that integrates cutting-edge technology with proven research principles, creating a systematic approach to evidence-based research that can be adapted across various disciplines and contexts.',
+      platformTitle: 'Our Platform',
+      platformContent: 'Our research platform provides researchers with advanced tools and resources needed to conduct high-quality, evidence-based studies, featuring state-of-the-art analytics, collaboration features, and comprehensive data management capabilities.'
+    },
+    joinUs: {
+      title: 'Join Our Research Community',
+      content: 'Become part of Saudi Arabia\'s leading clinical research community. Whether you\'re a healthcare student, practitioner, or researcher, we provide the training, mentorship, and resources you need to succeed in clinical research.'
+    },
+    heroContent: {
+      title1: 'Evidance',
+      title2: 'Research Platform',
+      subtitle: 'Advancing Clinical Research in Saudi Arabia',
+      stat1Number: '50+',
+      stat1Text: 'Research Projects',
+      stat2Number: '25+',
+      stat2Text: 'Publications',
+      stat3Number: '15+',
+      stat3Text: 'Partner Organizations',
+      stat4Number: '500+',
+      stat4Text: 'Researchers Trained'
+    },
+    homeSections: {
+      publicationsTitle: 'Recent Publications',
+      publicationsText: 'Explore our latest research publications and contributions to medical science. Our work spans multiple disciplines including clinical trials, public health studies, and innovative healthcare solutions.',
+      aimsTitle: 'What Are Our Aims and Goals?',
+      aimsText: 'We are committed to advancing clinical research in Saudi Arabia by providing comprehensive research education, facilitating innovative studies, and building a community of skilled healthcare researchers.',
+      researchTitle: 'Research Impact & Innovation',
+      researchText: 'Our research has contributed to significant advancements in healthcare delivery across the Kingdom. Through collaborative efforts with leading institutions, we have pioneered new methodologies and established best practices in clinical research.',
+      visionaryTitle: 'Our Visionary Model',
+      visionaryText: 'Our unique modified CRO model combines traditional clinical research excellence with innovative educational approaches, creating opportunities for healthcare professionals to engage in meaningful research while maintaining their clinical practice.',
+      joinUsTitle: 'Join Us!',
+      joinUsText: 'Become part of Saudi Arabia\'s leading clinical research community. Whether you\'re a healthcare student, practitioner, or researcher, we provide the training, mentorship, and resources you need to succeed in clinical research.'
+    },
+    publications: [
+      {
+        id: 1,
+        image: 'https://via.placeholder.com/300x200/4a90e2/ffffff?text=COVID-19+Study',
+        title: 'COVID-19 Vaccine Efficacy Study',
+        description: 'A comprehensive analysis of vaccine effectiveness in the Saudi population',
+        authors: 'Dr. Ahmed Al-Rashid, Dr. Sarah Al-Mansouri',
+        journal: 'Saudi Medical Journal',
+        date: '2024',
+        doi: '10.15537/smj.2024.01.001'
+      },
+      {
+        id: 2,
+        image: 'https://via.placeholder.com/300x200/50b3a2/ffffff?text=Diabetes+Research',
+        title: 'Diabetes Management Innovations',
+        description: 'Novel approaches to Type 2 diabetes management in the Middle East',
+        authors: 'Dr. Fatima Al-Zahra, Dr. Mohammed Al-Ghamdi',
+        journal: 'Middle East Journal of Diabetes',
+        date: '2024',
+        doi: '10.5144/0256-4947.2024.102'
+      },
+      {
+        id: 3,
+        image: 'https://via.placeholder.com/300x200/e74c3c/ffffff?text=Pediatric+Health',
+        title: 'Pediatric Health Outcomes',
+        description: 'Improving childhood health outcomes through evidence-based interventions',
+        authors: 'Dr. Norah Al-Sudairy, Dr. Khalid Al-Otaibi',
+        journal: 'Pediatric Research International',
+        date: '2024',
+        doi: '10.1038/s41390-024-03001-1'
       }
-    } catch (error) {
-      console.error('Error loading from GitHub:', error);
-    } finally {
-      setLoading(false);
+    ],
+    contactInfo: {
+      email: 'info@evidance.org.sa',
+      phone: '+966 11 123 4567',
+      address: 'Riyadh, Saudi Arabia'
     }
-  };
+  });
 
-  // Save data to GitHub
-  const saveToGitHub = async () => {
-    try {
-      // Check if token is set
-      if (!githubDataService.token && !githubDataService.getStoredToken()) {
-        setShowTokenSetup(true);
-        setSaveStatus('⚠️ Please set up your GitHub token first');
-        setTimeout(() => setSaveStatus(''), 3000);
-        return;
-      }
-
-      setLoading(true);
-      setSaveStatus('Saving to GitHub...');
-      
-      const allData = {
-        whoWeAre,
-        aimsGoals,
-        successRecord,
-        visionaryModel,
-        joinUs,
-        heroContent,
-        homeSections,
-        publications,
-        contactInfo
-      };
-
-      const result = await githubDataService.saveData(allData);
-      
-      if (result.success) {
-        setSaveStatus('✅ ' + result.message);
-        setTimeout(() => setSaveStatus(''), 5000);
-      } else {
-        setSaveStatus('⚠️ ' + result.message);
-        setTimeout(() => setSaveStatus(''), 5000);
-      }
-    } catch (error) {
-      console.error('Error saving:', error);
-      setSaveStatus('❌ Error: ' + error.message);
-      setTimeout(() => setSaveStatus(''), 5000);
-    } finally {
-      setLoading(false);
-    }
-  };
-
-  // Save GitHub token
-  const handleSaveToken = async () => {
-    if (!githubToken) {
-      alert('Please enter a GitHub token');
-      return;
-    }
-
-    setLoading(true);
-    
-    // Validate token
-    const validation = await githubDataService.validateToken(githubToken);
-    
-    if (validation.valid) {
-      githubDataService.setToken(githubToken);
-      setShowTokenSetup(false);
-      setSaveStatus(`✅ Token saved! Connected as ${validation.username}`);
-      setTimeout(() => setSaveStatus(''), 3000);
-      
-      // Load data after token is set
-      await loadFromGitHub();
-    } else {
-      alert('Invalid token: ' + validation.error);
-    }
-    
-    setLoading(false);
-  };
-
-  // Load data on component mount
   useEffect(() => {
-    const authStatus = sessionStorage.getItem('adminAuth');
-    if (authStatus === 'true') {
+    // Check if GitHub token is already stored
+    const storedToken = localStorage.getItem('github_token');
+    if (storedToken) {
+      setGithubToken(storedToken);
       setIsAuthenticated(true);
-      
-      // Initialize GitHub service
-      githubDataService.init();
-      
-      // Check if token exists
-      const storedToken = githubDataService.getStoredToken();
-      if (storedToken) {
-        setGithubToken(storedToken);
-      }
-      
-      // Load data
-      loadFromGitHub();
+      githubDataService.setToken(storedToken);
     }
+
+    // Load existing content
+    loadCurrentContent();
   }, []);
 
-  const handleLogin = (e) => {
-    e.preventDefault();
-    if (credentials.username === 'admin' && credentials.password === 'AdminCNS12**') {
-      setIsAuthenticated(true);
-      sessionStorage.setItem('adminAuth', 'true');
-      
-      // Initialize GitHub service
-      githubDataService.init();
-      
-      // Check if token exists
-      const storedToken = githubDataService.getStoredToken();
-      if (!storedToken) {
-        setShowTokenSetup(true);
-      } else {
-        loadFromGitHub();
+  const loadCurrentContent = async () => {
+    try {
+      const response = await fetch(`${process.env.PUBLIC_URL}/data/website-content.json?t=${Date.now()}`);
+      if (response.ok) {
+        const data = await response.json();
+        setContent(prevContent => ({
+          ...prevContent,
+          ...data
+        }));
       }
-    } else {
-      alert('Invalid credentials!');
+    } catch (error) {
+      console.log('Could not load current content:', error);
+    }
+  };
+
+  const handleTokenSubmit = (e) => {
+    e.preventDefault();
+    if (githubToken.trim()) {
+      localStorage.setItem('github_token', githubToken);
+      githubDataService.setToken(githubToken);
+      setIsAuthenticated(true);
+      setSaveStatus('Token saved successfully!');
+      setTimeout(() => setSaveStatus(''), 3000);
     }
   };
 
   const handleLogout = () => {
+    localStorage.removeItem('github_token');
+    setGithubToken('');
     setIsAuthenticated(false);
-    sessionStorage.removeItem('adminAuth');
-    setCredentials({ username: '', password: '' });
+    setSaveStatus('Logged out successfully');
+    setTimeout(() => setSaveStatus(''), 3000);
   };
 
-  const handleImageUpload = (pubId, e) => {
-    const file = e.target.files[0];
-    if (file && file.size < 500000) { // Limit to 500KB for base64
-      const reader = new FileReader();
-      reader.onloadend = () => {
-        setPublications(prev => prev.map(pub => 
-          pub.id === pubId ? { ...pub, image: reader.result } : pub
-        ));
-      };
-      reader.readAsDataURL(file);
-    } else {
-      alert('Please upload an image smaller than 500KB');
+  const handleInputChange = (section, field, value) => {
+    setContent(prevContent => ({
+      ...prevContent,
+      [section]: {
+        ...prevContent[section],
+        [field]: value
+      }
+    }));
+  };
+
+  const handlePublicationChange = (index, field, value) => {
+    setContent(prevContent => ({
+      ...prevContent,
+      publications: prevContent.publications.map((pub, i) => 
+        i === index ? { ...pub, [field]: value } : pub
+      )
+    }));
+  };
+
+  const addPublication = () => {
+    const newId = Math.max(...content.publications.map(p => p.id)) + 1;
+    setContent(prevContent => ({
+      ...prevContent,
+      publications: [
+        ...prevContent.publications,
+        {
+          id: newId,
+          image: '',
+          title: '',
+          description: '',
+          authors: '',
+          journal: '',
+          date: '',
+          doi: ''
+        }
+      ]
+    }));
+  };
+
+  const removePublication = (index) => {
+    setContent(prevContent => ({
+      ...prevContent,
+      publications: prevContent.publications.filter((_, i) => i !== index)
+    }));
+  };
+
+  const handleSave = async () => {
+    if (!isAuthenticated) {
+      setSaveStatus('Please set up GitHub token first');
+      setTimeout(() => setSaveStatus(''), 3000);
+      return;
     }
+
+    setIsSaving(true);
+    setSaveStatus('Saving to GitHub...');
+
+    try {
+      const success = await githubDataService.saveContent(content);
+      if (success) {
+        setSaveStatus('✅ Content saved successfully to GitHub!');
+        setLastSaved(new Date());
+      } else {
+        setSaveStatus('❌ Failed to save content. Please check your token and try again.');
+      }
+    } catch (error) {
+      console.error('Save error:', error);
+      setSaveStatus(`❌ Error: ${error.message}`);
+    }
+
+    setIsSaving(false);
+    setTimeout(() => setSaveStatus(''), 5000);
   };
 
   if (!isAuthenticated) {
     return (
-      <div className="admin-login">
-        <div className="login-container">
-          <h2>Admin Login</h2>
-          <form onSubmit={handleLogin}>
-            <input
-              type="text"
-              placeholder="Username"
-              value={credentials.username}
-              onChange={(e) => setCredentials({...credentials, username: e.target.value})}
-            />
+      <div className="admin-container">
+        <div className="auth-form">
+          <h2>GitHub Authentication Required</h2>
+          <p>Please enter your GitHub Personal Access Token to manage website content.</p>
+          <form onSubmit={handleTokenSubmit}>
             <input
               type="password"
-              placeholder="Password"
-              value={credentials.password}
-              onChange={(e) => setCredentials({...credentials, password: e.target.value})}
+              placeholder="GitHub Personal Access Token"
+              value={githubToken}
+              onChange={(e) => setGithubToken(e.target.value)}
+              required
             />
-            <button type="submit" className="btn btn-primary">Login</button>
+            <button type="submit">Authenticate</button>
           </form>
-        </div>
-      </div>
-    );
-  }
-
-  // GitHub Token Setup Modal
-  if (showTokenSetup) {
-    return (
-      <div className="admin-panel">
-        <div className="admin-header">
-          <h1>GitHub Token Setup</h1>
-          <button onClick={handleLogout} className="btn btn-secondary">Logout</button>
-        </div>
-        
-        <div className="admin-content">
-          <div className="admin-section">
-            <h2>Setup GitHub Access Token</h2>
-            <p>To save changes globally, you need a GitHub Personal Access Token.</p>
-            
-            <div style={{background: '#f0f0f0', padding: '20px', borderRadius: '8px', marginBottom: '20px'}}>
-              <h3>⚠️ Enter Your GitHub Token:</h3>
-              <p style={{color: '#d73502', fontWeight: 'bold'}}>
-                Your token has been provided. Enter it below to connect to GitHub.
-              </p>
-            </div>
-            
-            <div className="form-group">
-              <label>GitHub Personal Access Token:</label>
-              <input
-                type="password"
-                placeholder="ghp_xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx"
-                value={githubToken}
-                onChange={(e) => setGithubToken(e.target.value)}
-                style={{width: '100%', padding: '10px', fontSize: '14px', fontFamily: 'monospace'}}
-              />
-            </div>
-            
-            <div style={{marginTop: '20px'}}>
-              <button 
-                onClick={handleSaveToken} 
-                className="btn btn-primary"
-                disabled={loading || !githubToken}
-              >
-                {loading ? 'Validating...' : 'Save Token & Continue'}
-              </button>
-              <button 
-                onClick={() => setShowTokenSetup(false)} 
-                className="btn btn-secondary"
-                style={{marginLeft: '10px'}}
-              >
-                Skip (Local Save Only)
-              </button>
-            </div>
-            
-            <p style={{marginTop: '20px', color: '#666', fontSize: '14px'}}>
-              ⚠️ This token will be stored securely in your browser's local storage.
-              Never share this token or commit it to code.
-            </p>
-          </div>
+          {saveStatus && <div className="status-message">{saveStatus}</div>}
         </div>
       </div>
     );
   }
 
   return (
-    <div className="admin-panel">
+    <div className="admin-container">
       <div className="admin-header">
-        <h1>Evidance Admin Panel</h1>
-        <div className="admin-header-actions">
+        <h1>Website Content Management</h1>
+        <div className="admin-controls">
+          {lastSaved && (
+            <span className="last-saved">
+              Last saved: {lastSaved.toLocaleString()}
+            </span>
+          )}
           <button 
-            onClick={() => setShowTokenSetup(true)} 
-            className="btn btn-secondary"
-            title="Configure GitHub Token"
+            onClick={handleSave} 
+            disabled={isSaving}
+            className="save-btn"
           >
-            ⚙️ Settings
+            {isSaving ? 'Saving...' : 'Save to GitHub'}
           </button>
-          <button 
-            onClick={saveToGitHub} 
-            className="btn btn-accent"
-            disabled={loading}
-          >
-            {loading ? 'Saving...' : '💾 Save to GitHub'}
+          <button onClick={handleLogout} className="logout-btn">
+            Logout
           </button>
-          <button onClick={handleLogout} className="btn btn-secondary">Logout</button>
         </div>
       </div>
 
-      {saveStatus && (
-        <div className={`save-status ${saveStatus.includes('✅') ? 'success' : saveStatus.includes('⚠️') ? 'warning' : 'error'}`}>
-          {saveStatus}
+      {saveStatus && <div className="status-message">{saveStatus}</div>}
+
+      {/* Hero Content */}
+      <section className="admin-section">
+        <h2>Hero Section</h2>
+        <div className="form-group">
+          <label>Title 1:</label>
+          <input
+            type="text"
+            value={content.heroContent.title1}
+            onChange={(e) => handleInputChange('heroContent', 'title1', e.target.value)}
+          />
         </div>
-      )}
+        <div className="form-group">
+          <label>Title 2:</label>
+          <input
+            type="text"
+            value={content.heroContent.title2}
+            onChange={(e) => handleInputChange('heroContent', 'title2', e.target.value)}
+          />
+        </div>
+        <div className="form-group">
+          <label>Subtitle:</label>
+          <input
+            type="text"
+            value={content.heroContent.subtitle}
+            onChange={(e) => handleInputChange('heroContent', 'subtitle', e.target.value)}
+          />
+        </div>
+        {/* Stats */}
+        <div className="stats-grid">
+          {[1, 2, 3, 4].map(num => (
+            <div key={num} className="stat-group">
+              <label>Stat {num} Number:</label>
+              <input
+                type="text"
+                value={content.heroContent[`stat${num}Number`]}
+                onChange={(e) => handleInputChange('heroContent', `stat${num}Number`, e.target.value)}
+              />
+              <label>Stat {num} Text:</label>
+              <input
+                type="text"
+                value={content.heroContent[`stat${num}Text`]}
+                onChange={(e) => handleInputChange('heroContent', `stat${num}Text`, e.target.value)}
+              />
+            </div>
+          ))}
+        </div>
+      </section>
 
-      <div className="admin-tabs">
-        <button 
-          className={activeTab === 'content' ? 'active' : ''} 
-          onClick={() => setActiveTab('content')}
-        >
-          Page Content
-        </button>
-        <button 
-          className={activeTab === 'hero' ? 'active' : ''} 
-          onClick={() => setActiveTab('hero')}
-        >
-          Hero Section
-        </button>
-        <button 
-          className={activeTab === 'home' ? 'active' : ''} 
-          onClick={() => setActiveTab('home')}
-        >
-          Home Sections
-        </button>
-        <button 
-          className={activeTab === 'publications' ? 'active' : ''} 
-          onClick={() => setActiveTab('publications')}
-        >
-          Publications
-        </button>
-        <button 
-          className={activeTab === 'contact' ? 'active' : ''} 
-          onClick={() => setActiveTab('contact')}
-        >
-          Contact Info
-        </button>
-      </div>
-
-      <div className="admin-content">
-        {activeTab === 'content' && (
-          <div className="content-tab">
-            {/* Who We Are Section */}
-            <section className="admin-section">
-              <h2>Who We Are Page</h2>
-              <div className="subsection-grid">
-                <div className="subsection">
-                  <h3>Our Story</h3>
-                  <input 
-                    type="text" 
-                    placeholder="Story Title"
-                    value={whoWeAre.storyTitle}
-                    onChange={(e) => setWhoWeAre({...whoWeAre, storyTitle: e.target.value})}
-                  />
-                  <textarea
-                    rows="4"
-                    placeholder="Story Content"
-                    value={whoWeAre.storyContent}
-                    onChange={(e) => setWhoWeAre({...whoWeAre, storyContent: e.target.value})}
-                  />
-                </div>
-                <div className="subsection">
-                  <h3>Our Team</h3>
-                  <input 
-                    type="text" 
-                    placeholder="Team Title"
-                    value={whoWeAre.teamTitle}
-                    onChange={(e) => setWhoWeAre({...whoWeAre, teamTitle: e.target.value})}
-                  />
-                  <textarea
-                    rows="4"
-                    placeholder="Team Content"
-                    value={whoWeAre.teamContent}
-                    onChange={(e) => setWhoWeAre({...whoWeAre, teamContent: e.target.value})}
-                  />
-                </div>
-                <div className="subsection">
-                  <h3>Our Values</h3>
-                  <input 
-                    type="text" 
-                    placeholder="Values Title"
-                    value={whoWeAre.valuesTitle}
-                    onChange={(e) => setWhoWeAre({...whoWeAre, valuesTitle: e.target.value})}
-                  />
-                  <textarea
-                    rows="4"
-                    placeholder="Values Content"
-                    value={whoWeAre.valuesContent}
-                    onChange={(e) => setWhoWeAre({...whoWeAre, valuesContent: e.target.value})}
-                  />
-                </div>
-              </div>
-            </section>
-
-            {/* Aims & Goals Section */}
-            <section className="admin-section">
-              <h2>Aims & Goals Page</h2>
-              <div className="subsection-grid">
-                <div className="subsection">
-                  <h3>Primary Objectives</h3>
-                  <input 
-                    type="text" 
-                    placeholder="Objectives Title"
-                    value={aimsGoals.objectivesTitle}
-                    onChange={(e) => setAimsGoals({...aimsGoals, objectivesTitle: e.target.value})}
-                  />
-                  <textarea
-                    rows="4"
-                    placeholder="Objectives Content"
-                    value={aimsGoals.objectivesContent}
-                    onChange={(e) => setAimsGoals({...aimsGoals, objectivesContent: e.target.value})}
-                  />
-                </div>
-                <div className="subsection">
-                  <h3>Strategic Goals</h3>
-                  <input 
-                    type="text" 
-                    placeholder="Goals Title"
-                    value={aimsGoals.goalsTitle}
-                    onChange={(e) => setAimsGoals({...aimsGoals, goalsTitle: e.target.value})}
-                  />
-                  <textarea
-                    rows="4"
-                    placeholder="Goals Content"
-                    value={aimsGoals.goalsContent}
-                    onChange={(e) => setAimsGoals({...aimsGoals, goalsContent: e.target.value})}
-                  />
-                </div>
-                <div className="subsection">
-                  <h3>Future Vision</h3>
-                  <input 
-                    type="text" 
-                    placeholder="Vision Title"
-                    value={aimsGoals.visionTitle}
-                    onChange={(e) => setAimsGoals({...aimsGoals, visionTitle: e.target.value})}
-                  />
-                  <textarea
-                    rows="4"
-                    placeholder="Vision Content"
-                    value={aimsGoals.visionContent}
-                    onChange={(e) => setAimsGoals({...aimsGoals, visionContent: e.target.value})}
-                  />
-                </div>
-              </div>
-            </section>
-
-            {/* Success Record Section */}
-            <section className="admin-section">
-              <h2>Success Record Page</h2>
-              <div className="subsection-grid">
-                <div className="subsection">
-                  <h3>Key Achievements</h3>
-                  <input 
-                    type="text" 
-                    placeholder="Achievements Title"
-                    value={successRecord.achievementsTitle}
-                    onChange={(e) => setSuccessRecord({...successRecord, achievementsTitle: e.target.value})}
-                  />
-                  <textarea
-                    rows="4"
-                    placeholder="Achievements Content"
-                    value={successRecord.achievementsContent}
-                    onChange={(e) => setSuccessRecord({...successRecord, achievementsContent: e.target.value})}
-                  />
-                </div>
-                <div className="subsection">
-                  <h3>Research Publications</h3>
-                  <input 
-                    type="text" 
-                    placeholder="Publications Title"
-                    value={successRecord.publicationsTitle}
-                    onChange={(e) => setSuccessRecord({...successRecord, publicationsTitle: e.target.value})}
-                  />
-                  <textarea
-                    rows="4"
-                    placeholder="Publications Content"
-                    value={successRecord.publicationsContent}
-                    onChange={(e) => setSuccessRecord({...successRecord, publicationsContent: e.target.value})}
-                  />
-                </div>
-                <div className="subsection">
-                  <h3>Success Stories</h3>
-                  <input 
-                    type="text" 
-                    placeholder="Stories Title"
-                    value={successRecord.storiesTitle}
-                    onChange={(e) => setSuccessRecord({...successRecord, storiesTitle: e.target.value})}
-                  />
-                  <textarea
-                    rows="4"
-                    placeholder="Stories Content"
-                    value={successRecord.storiesContent}
-                    onChange={(e) => setSuccessRecord({...successRecord, storiesContent: e.target.value})}
-                  />
-                </div>
-              </div>
-            </section>
-
-            {/* Visionary Model Section */}
-            <section className="admin-section">
-              <h2>Visionary Model Page</h2>
-              <div className="subsection-grid">
-                <div className="subsection">
-                  <h3>Modified CRO Approach</h3>
-                  <input 
-                    type="text" 
-                    placeholder="Approach Title"
-                    value={visionaryModel.approachTitle}
-                    onChange={(e) => setVisionaryModel({...visionaryModel, approachTitle: e.target.value})}
-                  />
-                  <textarea
-                    rows="4"
-                    placeholder="Approach Content"
-                    value={visionaryModel.approachContent}
-                    onChange={(e) => setVisionaryModel({...visionaryModel, approachContent: e.target.value})}
-                  />
-                </div>
-                <div className="subsection">
-                  <h3>Innovation Framework</h3>
-                  <input 
-                    type="text" 
-                    placeholder="Framework Title"
-                    value={visionaryModel.frameworkTitle}
-                    onChange={(e) => setVisionaryModel({...visionaryModel, frameworkTitle: e.target.value})}
-                  />
-                  <textarea
-                    rows="4"
-                    placeholder="Framework Content"
-                    value={visionaryModel.frameworkContent}
-                    onChange={(e) => setVisionaryModel({...visionaryModel, frameworkContent: e.target.value})}
-                  />
-                </div>
-                <div className="subsection">
-                  <h3>Digital Platform</h3>
-                  <input 
-                    type="text" 
-                    placeholder="Platform Title"
-                    value={visionaryModel.platformTitle}
-                    onChange={(e) => setVisionaryModel({...visionaryModel, platformTitle: e.target.value})}
-                  />
-                  <textarea
-                    rows="4"
-                    placeholder="Platform Content"
-                    value={visionaryModel.platformContent}
-                    onChange={(e) => setVisionaryModel({...visionaryModel, platformContent: e.target.value})}
-                  />
-                </div>
-              </div>
-            </section>
-
-            {/* Join Us Section */}
-            <section className="admin-section">
-              <h2>Join Us Page</h2>
-              <div className="content-editor">
-                <h3>Page Title</h3>
-                <input 
-                  type="text" 
-                  placeholder="Join Us Title"
-                  value={joinUs.title}
-                  onChange={(e) => setJoinUs({...joinUs, title: e.target.value})}
-                />
-              </div>
-              <div className="content-editor">
-                <h3>Main Content</h3>
-                <textarea
-                  rows="6"
-                  placeholder="Join Us Content"
-                  value={joinUs.content}
-                  onChange={(e) => setJoinUs({...joinUs, content: e.target.value})}
-                />
-              </div>
-              <div className="content-editor">
-                <h3>Contact Information</h3>
-                <textarea
-                  rows="4"
-                  placeholder="Contact details and instructions"
-                  value={joinUs.contactInfo}
-                  onChange={(e) => setJoinUs({...joinUs, contactInfo: e.target.value})}
-                />
-              </div>
-            </section>
+      {/* Home Sections */}
+      <section className="admin-section">
+        <h2>Home Page Sections</h2>
+        {Object.entries(content.homeSections).map(([key, value]) => (
+          <div key={key} className="form-group">
+            <label>{key.replace(/([A-Z])/g, ' $1').replace(/^./, str => str.toUpperCase())}:</label>
+            <textarea
+              value={value}
+              onChange={(e) => handleInputChange('homeSections', key, e.target.value)}
+              rows="3"
+            />
           </div>
-        )}
+        ))}
+      </section>
 
-        {activeTab === 'hero' && (
-          <section className="admin-section">
-            <h2>Hero Section Content</h2>
-            <div className="form-grid">
-              <div className="form-group">
-                <label>Title Line 1</label>
-                <input 
-                  type="text" 
-                  value={heroContent.title1}
-                  onChange={(e) => setHeroContent({...heroContent, title1: e.target.value})}
-                />
-              </div>
-              <div className="form-group">
-                <label>Title Line 2</label>
-                <input 
-                  type="text" 
-                  value={heroContent.title2}
-                  onChange={(e) => setHeroContent({...heroContent, title2: e.target.value})}
-                />
-              </div>
+      {/* Who We Are */}
+      <section className="admin-section">
+        <h2>Who We Are Page</h2>
+        {Object.entries(content.whoWeAre).map(([key, value]) => (
+          <div key={key} className="form-group">
+            <label>{key.replace(/([A-Z])/g, ' $1').replace(/^./, str => str.toUpperCase())}:</label>
+            <textarea
+              value={value}
+              onChange={(e) => handleInputChange('whoWeAre', key, e.target.value)}
+              rows="3"
+            />
+          </div>
+        ))}
+      </section>
+
+      {/* Publications */}
+      <section className="admin-section">
+        <h2>Publications</h2>
+        {content.publications.map((pub, index) => (
+          <div key={pub.id} className="publication-form">
+            <h3>Publication {index + 1}</h3>
+            <div className="form-group">
+              <label>Title:</label>
+              <input
+                type="text"
+                value={pub.title}
+                onChange={(e) => handlePublicationChange(index, 'title', e.target.value)}
+              />
             </div>
             <div className="form-group">
-              <label>Subtitle</label>
+              <label>Description:</label>
               <textarea
-                rows="3"
-                value={heroContent.subtitle}
-                onChange={(e) => setHeroContent({...heroContent, subtitle: e.target.value})}
+                value={pub.description}
+                onChange={(e) => handlePublicationChange(index, 'description', e.target.value)}
+                rows="2"
               />
             </div>
-            <h3>Statistics</h3>
-            <div className="stats-grid">
-              <div className="stat-editor">
-                <input 
-                  type="text" 
-                  placeholder="Number"
-                  value={heroContent.stat1Number}
-                  onChange={(e) => setHeroContent({...heroContent, stat1Number: e.target.value})}
-                />
-                <input 
-                  type="text" 
-                  placeholder="Text"
-                  value={heroContent.stat1Text}
-                  onChange={(e) => setHeroContent({...heroContent, stat1Text: e.target.value})}
-                />
-              </div>
-              <div className="stat-editor">
-                <input 
-                  type="text" 
-                  placeholder="Number"
-                  value={heroContent.stat2Number}
-                  onChange={(e) => setHeroContent({...heroContent, stat2Number: e.target.value})}
-                />
-                <input 
-                  type="text" 
-                  placeholder="Text"
-                  value={heroContent.stat2Text}
-                  onChange={(e) => setHeroContent({...heroContent, stat2Text: e.target.value})}
-                />
-              </div>
-              <div className="stat-editor">
-                <input 
-                  type="text" 
-                  placeholder="Number"
-                  value={heroContent.stat3Number}
-                  onChange={(e) => setHeroContent({...heroContent, stat3Number: e.target.value})}
-                />
-                <input 
-                  type="text" 
-                  placeholder="Text"
-                  value={heroContent.stat3Text}
-                  onChange={(e) => setHeroContent({...heroContent, stat3Text: e.target.value})}
-                />
-              </div>
-              <div className="stat-editor">
-                <input 
-                  type="text" 
-                  placeholder="Number"
-                  value={heroContent.stat4Number}
-                  onChange={(e) => setHeroContent({...heroContent, stat4Number: e.target.value})}
-                />
-                <input 
-                  type="text" 
-                  placeholder="Text"
-                  value={heroContent.stat4Text}
-                  onChange={(e) => setHeroContent({...heroContent, stat4Text: e.target.value})}
-                />
-              </div>
+            <div className="form-group">
+              <label>Image URL:</label>
+              <input
+                type="url"
+                value={pub.image}
+                onChange={(e) => handlePublicationChange(index, 'image', e.target.value)}
+              />
             </div>
-          </section>
-        )}
+            <div className="form-group">
+              <label>Authors:</label>
+              <input
+                type="text"
+                value={pub.authors}
+                onChange={(e) => handlePublicationChange(index, 'authors', e.target.value)}
+              />
+            </div>
+            <div className="form-group">
+              <label>Journal:</label>
+              <input
+                type="text"
+                value={pub.journal}
+                onChange={(e) => handlePublicationChange(index, 'journal', e.target.value)}
+              />
+            </div>
+            <div className="form-group">
+              <label>Date:</label>
+              <input
+                type="text"
+                value={pub.date}
+                onChange={(e) => handlePublicationChange(index, 'date', e.target.value)}
+              />
+            </div>
+            <div className="form-group">
+              <label>DOI:</label>
+              <input
+                type="text"
+                value={pub.doi}
+                onChange={(e) => handlePublicationChange(index, 'doi', e.target.value)}
+              />
+            </div>
+            <button 
+              type="button" 
+              onClick={() => removePublication(index)}
+              className="remove-btn"
+            >
+              Remove Publication
+            </button>
+          </div>
+        ))}
+        <button onClick={addPublication} className="add-btn">
+          Add New Publication
+        </button>
+      </section>
 
-        {activeTab === 'home' && (
-          <section className="admin-section">
-            <h2>Home Page Sections</h2>
-            
-            <div className="content-editor">
-              <h3>Publications Section</h3>
-              <input 
-                type="text" 
-                placeholder="Section Title"
-                value={homeSections.publicationsTitle}
-                onChange={(e) => setHomeSections({...homeSections, publicationsTitle: e.target.value})}
-              />
-              <textarea
-                rows="4"
-                placeholder="Section Text"
-                value={homeSections.publicationsText}
-                onChange={(e) => setHomeSections({...homeSections, publicationsText: e.target.value})}
-              />
-            </div>
+      {/* Contact Info */}
+      <section className="admin-section">
+        <h2>Contact Information</h2>
+        <div className="form-group">
+          <label>Email:</label>
+          <input
+            type="email"
+            value={content.contactInfo.email}
+            onChange={(e) => handleInputChange('contactInfo', 'email', e.target.value)}
+          />
+        </div>
+        <div className="form-group">
+          <label>Phone:</label>
+          <input
+            type="text"
+            value={content.contactInfo.phone}
+            onChange={(e) => handleInputChange('contactInfo', 'phone', e.target.value)}
+          />
+        </div>
+        <div className="form-group">
+          <label>Address:</label>
+          <input
+            type="text"
+            value={content.contactInfo.address}
+            onChange={(e) => handleInputChange('contactInfo', 'address', e.target.value)}
+          />
+        </div>
+      </section>
 
-            <div className="content-editor">
-              <h3>Aims & Goals Section</h3>
-              <input 
-                type="text" 
-                placeholder="Section Title"
-                value={homeSections.aimsTitle}
-                onChange={(e) => setHomeSections({...homeSections, aimsTitle: e.target.value})}
-              />
-              <textarea
-                rows="4"
-                placeholder="Section Text"
-                value={homeSections.aimsText}
-                onChange={(e) => setHomeSections({...homeSections, aimsText: e.target.value})}
-              />
-            </div>
-
-            <div className="content-editor">
-              <h3>Research Impact Section</h3>
-              <input 
-                type="text" 
-                placeholder="Section Title"
-                value={homeSections.researchTitle}
-                onChange={(e) => setHomeSections({...homeSections, researchTitle: e.target.value})}
-              />
-              <textarea
-                rows="4"
-                placeholder="Section Text"
-                value={homeSections.researchText}
-                onChange={(e) => setHomeSections({...homeSections, researchText: e.target.value})}
-              />
-            </div>
-
-            <div className="content-editor">
-              <h3>Visionary Model Section</h3>
-              <input 
-                type="text" 
-                placeholder="Section Title"
-                value={homeSections.visionaryTitle}
-                onChange={(e) => setHomeSections({...homeSections, visionaryTitle: e.target.value})}
-              />
-              <textarea
-                rows="4"
-                placeholder="Section Text"
-                value={homeSections.visionaryText}
-                onChange={(e) => setHomeSections({...homeSections, visionaryText: e.target.value})}
-              />
-            </div>
-
-            <div className="content-editor">
-              <h3>Join Us Section</h3>
-              <input 
-                type="text" 
-                placeholder="Section Title"
-                value={homeSections.joinUsTitle}
-                onChange={(e) => setHomeSections({...homeSections, joinUsTitle: e.target.value})}
-              />
-              <textarea
-                rows="4"
-                placeholder="Section Text"
-                value={homeSections.joinUsText}
-                onChange={(e) => setHomeSections({...homeSections, joinUsText: e.target.value})}
-              />
-            </div>
-          </section>
-        )}
-
-        {activeTab === 'publications' && (
-          <section className="admin-section">
-            <h2>Manage Publications</h2>
-            <div className="publications-grid">
-              {publications.map((pub) => (
-                <div key={pub.id} className="publication-editor">
-                  <h4>Publication {pub.id}</h4>
-                  <input 
-                    type="text" 
-                    placeholder="Title"
-                    value={pub.title}
-                    onChange={(e) => setPublications(prev => prev.map(p => 
-                      p.id === pub.id ? {...p, title: e.target.value} : p
-                    ))}
-                  />
-                  <textarea
-                    rows="3"
-                    placeholder="Description"
-                    value={pub.description}
-                    onChange={(e) => setPublications(prev => prev.map(p => 
-                      p.id === pub.id ? {...p, description: e.target.value} : p
-                    ))}
-                  />
-                  <input 
-                    type="file" 
-                    accept="image/*"
-                    onChange={(e) => handleImageUpload(pub.id, e)}
-                  />
-                  {pub.image && (
-                    <img src={pub.image} alt={pub.title} style={{width: '100%', marginTop: '10px'}} />
-                  )}
-                </div>
-              ))}
-            </div>
-          </section>
-        )}
-
-        {activeTab === 'contact' && (
-          <section className="admin-section">
-            <h2>Contact Information</h2>
-            <div className="content-editor">
-              <h3>Email</h3>
-              <input 
-                type="email" 
-                value={contactInfo.email}
-                onChange={(e) => setContactInfo({...contactInfo, email: e.target.value})}
-              />
-            </div>
-            <div className="content-editor">
-              <h3>Phone</h3>
-              <input 
-                type="text" 
-                value={contactInfo.phone}
-                onChange={(e) => setContactInfo({...contactInfo, phone: e.target.value})}
-              />
-            </div>
-            <div className="content-editor">
-              <h3>Address</h3>
-              <textarea
-                rows="3"
-                value={contactInfo.address}
-                onChange={(e) => setContactInfo({...contactInfo, address: e.target.value})}
-              />
-            </div>
-          </section>
-        )}
+      <div className="admin-footer">
+        <button 
+          onClick={handleSave} 
+          disabled={isSaving}
+          className="save-btn primary"
+        >
+          {isSaving ? '💾 Saving to GitHub...' : '💾 Save All Changes'}
+        </button>
       </div>
     </div>
   );
