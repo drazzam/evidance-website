@@ -1,0 +1,108 @@
+{
+  "whoWeAre": {
+    "storyTitle": "Our Story",
+    "storyContent": "Evidance is Saudi Arabia's pioneering modified clinical research organization, established to bridge the gap between academic knowledge and practical research experience.",
+    "teamTitle": "Our Team",
+    "teamContent": "Our team consists of experienced researchers, healthcare professionals, and educators dedicated to advancing clinical research in the Kingdom.",
+    "valuesTitle": "Our Values",
+    "valuesContent": "We believe in excellence, integrity, innovation, and collaboration in all our research endeavors."
+  },
+  "aimsGoals": {
+    "objectivesTitle": "Primary Objectives",
+    "objectivesContent": "To provide comprehensive research training and facilitate high-quality clinical studies that contribute to global medical knowledge.",
+    "goalsTitle": "Strategic Goals",
+    "goalsContent": "Build research capacity in Saudi Arabia, foster international collaborations, and publish impactful research in leading journals.",
+    "visionTitle": "Future Vision",
+    "visionContent": "To become the leading clinical research organization in the Middle East, recognized for excellence in research and education."
+  },
+  "successRecord": {
+    "achievementsTitle": "Key Achievements",
+    "achievementsContent": "Over 50 successful research projects completed, 250+ researchers trained, and numerous publications in high-impact journals.",
+    "publicationsTitle": "Research Publications",
+    "publicationsContent": "Our researchers have published in prestigious journals including The Lancet, NEJM, and BMJ, contributing to global medical knowledge.",
+    "storiesTitle": "Success Stories",
+    "storiesContent": "From training medical students to leading international clinical trials, our success stories inspire the next generation of researchers."
+  },
+  "visionaryModel": {
+    "approachTitle": "Modified CRO Approach",
+    "approachContent": "Our unique model combines traditional CRO services with comprehensive research education and mentorship programs.",
+    "frameworkTitle": "Innovation Framework",
+    "frameworkContent": "We leverage cutting-edge technology and innovative methodologies to conduct efficient and impactful clinical research.",
+    "platformTitle": "Digital Platform",
+    "platformContent": "Our digital infrastructure enables seamless collaboration, data management, and remote research capabilities."
+  },
+  "joinUs": {
+    "title": "Join Our Research Community",
+    "content": "Whether you're a medical student, healthcare professional, or experienced researcher, Evidance offers opportunities to grow your research career.",
+    "contactInfo": "Contact us at info@evidance.com or call +966 54 945 0781 to learn more about our programs and opportunities."
+  },
+  "heroContent": {
+    "title1": "Advancing Healthcare Through",
+    "title2": "Innovative Research",
+    "subtitle": "Join Evidance, Saudi Arabia's pioneering modified clinical research organization, where healthcare students and practitioners gain hands-on research experience leading to published work.",
+    "stat1Number": "50+",
+    "stat1Text": "Research Projects",
+    "stat2Number": "250+",
+    "stat2Text": "Trained Researchers",
+    "stat3Number": "25+",
+    "stat3Text": "Published Papers",
+    "stat4Number": "15+",
+    "stat4Text": "Accepted Papers"
+  },
+  "homeSections": {
+    "publicationsTitle": "Recent Publications",
+    "publicationsText": "Explore our latest research publications and contributions to medical science. Our work spans multiple disciplines including clinical trials, public health studies, and innovative healthcare solutions.",
+    "aimsTitle": "What Are Our Aims and Goals?",
+    "aimsText": "We are committed to advancing clinical research in Saudi Arabia by providing comprehensive research education, facilitating innovative studies, and building a community of skilled healthcare researchers.",
+    "researchTitle": "Research Impact & Innovation",
+    "researchText": "Our research has contributed to significant advancements in healthcare delivery across the Kingdom. Through collaborative efforts with leading institutions, we have pioneered new methodologies and established best practices in clinical research.",
+    "visionaryTitle": "Our Visionary Model",
+    "visionaryText": "Our unique modified CRO model combines traditional clinical research excellence with innovative educational approaches, creating opportunities for healthcare professionals to engage in meaningful research while maintaining their clinical practice.",
+    "joinUsTitle": "Join Us!",
+    "joinUsText": "Become part of Saudi Arabia's leading clinical research community. Whether you're a healthcare student, practitioner, or researcher, we provide the training, mentorship, and resources you need to succeed in clinical research."
+  },
+  "publications": [
+    {
+      "id": 1,
+      "image": "",
+      "title": "COVID-19 Vaccine Efficacy Study",
+      "description": "A comprehensive analysis of vaccine effectiveness in the Saudi population"
+    },
+    {
+      "id": 2,
+      "image": "",
+      "title": "Diabetes Management Innovations",
+      "description": "Novel approaches to Type 2 diabetes management in the Middle East"
+    },
+    {
+      "id": 3,
+      "image": "",
+      "title": "Pediatric Health Outcomes",
+      "description": "Improving childhood health outcomes through evidence-based interventions"
+    },
+    {
+      "id": 4,
+      "image": "",
+      "title": "Mental Health in Healthcare Workers",
+      "description": "Addressing burnout and wellness in medical professionals"
+    },
+    {
+      "id": 5,
+      "image": "",
+      "title": "Cardiovascular Risk Factors",
+      "description": "Population-based study of heart disease risk in Saudi Arabia"
+    },
+    {
+      "id": 6,
+      "image": "",
+      "title": "Women's Health Research",
+      "description": "Advancing women's health through targeted clinical studies"
+    }
+  ],
+  "contactInfo": {
+    "email": "info@evidance.com",
+    "phone": "+966 54 945 0781",
+    "address": "Riyadh, Kingdom of Saudi Arabia"
+  },
+  "lastUpdated": "2025-08-30T00:00:00.000Z"
+}
