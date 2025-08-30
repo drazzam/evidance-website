@@ -40,12 +40,8 @@
 .page-header h1 {
   font-size: 3rem;
   font-weight: 700;
-  color: #2c3e50;
+  color: white;
   margin: 0;
-  background: linear-gradient(45deg, #667eea, #764ba2);
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-  background-clip: text;
 }
 
 .page-content {
@@ -78,8 +74,8 @@
 }
 
 .content-section:hover {
-  transform: translateY(-3px);
-  box-shadow: 0 8px 30px rgba(0, 0, 0, 0.12);
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.1);
 }
 
 .content-section:hover::before {
@@ -125,12 +121,6 @@
 
 .content-text p:last-child {
   margin-bottom: 0;
-}
-
-.content-text p:first-letter {
-  font-size: 1.3em;
-  font-weight: 600;
-  color: #667eea;
 }
 
 @keyframes fadeIn {
