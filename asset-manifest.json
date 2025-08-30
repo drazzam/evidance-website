@@ -1,13 +1,13 @@
 {
   "files": {
-    "main.css": "/evidance-website/static/css/main.f7620ec3.css",
-    "main.js": "/evidance-website/static/js/main.287bd8b5.js",
+    "main.css": "/evidance-website/static/css/main.4ddc9a26.css",
+    "main.js": "/evidance-website/static/js/main.55172abe.js",
     "index.html": "/evidance-website/index.html",
-    "main.f7620ec3.css.map": "/evidance-website/static/css/main.f7620ec3.css.map",
-    "main.287bd8b5.js.map": "/evidance-website/static/js/main.287bd8b5.js.map"
+    "main.4ddc9a26.css.map": "/evidance-website/static/css/main.4ddc9a26.css.map",
+    "main.55172abe.js.map": "/evidance-website/static/js/main.55172abe.js.map"
   },
   "entrypoints": [
-    "static/css/main.f7620ec3.css",
-    "static/js/main.287bd8b5.js"
+    "static/css/main.4ddc9a26.css",
+    "static/js/main.55172abe.js"
   ]
 }
