@@ -2,86 +2,136 @@ import React, { useState, useEffect } from 'react';
 import './Hero.css';
 
 const Hero = () => {
-  const [content, setContent] = useState({
-    title1: 'Advancing Healthcare Through',
-    title2: 'Innovative Research',
-    subtitle: "Join Evidance, Saudi Arabia's pioneering modified clinical research organization, where healthcare students and practitioners gain hands-on research experience leading to published work.",
-    stat1Number: '50+',
+  const [heroData, setHeroData] = useState({
+    title1: 'Evidance',
+    title2: 'Research Platform',
+    subtitle: 'Advancing evidence-based research methodologies',
+    stat1Number: '100+',
     stat1Text: 'Research Projects',
-    stat2Number: '250+',
-    stat2Text: 'Trained Researchers',
+    stat2Number: '50+',
+    stat2Text: 'Publications',
     stat3Number: '25+',
-    stat3Text: 'Published Papers',
-    stat4Number: '15+',
-    stat4Text: 'Accepted Papers'
+    stat3Text: 'Partner Organizations',
+    stat4Number: '1000+',
+    stat4Text: 'Citations'
   });
+  const [isLoading, setIsLoading] = useState(true);
+  const [error, setError] = useState(null);
+
+  const loadContent = async () => {
+    try {
+      setError(null);
+      const response = await fetch(`${process.env.PUBLIC_URL}/data/website-content.json?t=${Date.now()}`, {
+        cache: 'no-cache',
+        headers: {
+          'Cache-Control': 'no-cache',
+          'Pragma': 'no-cache'
+        }
+      });
+      
+      if (!response.ok) {
+        throw new Error(`HTTP error! status: ${response.status}`);
+      }
+      
+      const data = await response.json();
+      
+      if (data.heroContent) {
+        setHeroData(prevData => ({
+          ...prevData,
+          ...data.heroContent
+        }));
+        // Store in localStorage as backup
+        localStorage.setItem('evidance_heroContent', JSON.stringify(data.heroContent));
+      }
+      
+      setIsLoading(false);
+    } catch (err) {
+      console.warn('Failed to fetch hero content from GitHub:', err);
+      setError(err.message);
+      
+      // Try to load from localStorage as fallback
+      const cachedData = localStorage.getItem('evidance_heroContent');
+      if (cachedData) {
+        try {
+          const parsedData = JSON.parse(cachedData);
+          setHeroData(prevData => ({
+            ...prevData,
+            ...parsedData
+          }));
+          console.log('Loaded hero content from cache');
+        } catch (parseErr) {
+          console.error('Error parsing cached hero data:', parseErr);
+        }
+      }
+      
+      setIsLoading(false);
+    }
+  };
 
   useEffect(() => {
     loadContent();
-    // Check for updates every 30 seconds
-    const interval = setInterval(loadContent, 30000);
-    return () => clearInterval(interval);
+    
+    // Set up auto-refresh every 60 seconds
+    const refreshInterval = setInterval(loadContent, 60000);
+    
+    return () => {
+      clearInterval(refreshInterval);
+    };
   }, []);
 
-const loadContent = async () => {
-  try {
-    const response = await fetch(`${process.env.PUBLIC_URL}/data/website-content.json?t=${Date.now()}`);
-    if (response.ok) {
-      const data = await response.json();
-      if (data.heroContent) {
-        setContent(data.heroContent);
-      }
-    }
-  } catch (error) {
-    const saved = localStorage.getItem('evidance_data');
-    if (saved) {
-      const data = JSON.parse(saved);
-      if (data.heroContent) {
-        setContent(data.heroContent);
-      }
-    }
+  if (isLoading) {
+    return (
+      <section className="hero">
+        <div className="hero-container">
+          <div className="hero-content">
+            <div className="loading-spinner">Loading...</div>
+          </div>
+        </div>
+      </section>
+    );
   }
-};
 
   return (
     <section className="hero">
       <div className="hero-container">
-        <div className="hero-logo-container">
-          <img 
-            src={`${process.env.PUBLIC_URL}/images/evidance_logo_transparent.png`}
-            alt="Evidance Logo" 
-            className="hero-logo"
-          />
-        </div>
         <div className="hero-content">
+          {error && (
+            <div className="error-notice" style={{ 
+              backgroundColor: '#fff3cd', 
+              color: '#856404', 
+              padding: '10px', 
+              borderRadius: '4px', 
+              marginBottom: '20px',
+              fontSize: '14px'
+            }}>
+              Using cached content (GitHub data temporarily unavailable)
+            </div>
+          )}
+          
           <h1 className="hero-title">
-            <span className="title-line">{content.title1}</span>
-            <span className="title-line primary-gradient">{content.title2}</span>
+            <span className="title-part-1">{heroData.title1}</span>
+            <span className="title-part-2">{heroData.title2}</span>
           </h1>
-          <p className="hero-subtitle">
-            {content.subtitle}
-          </p>
+          
+          <p className="hero-subtitle">{heroData.subtitle}</p>
+          
           <div className="hero-stats">
             <div className="stat-item">
-              <span className="stat-number">{content.stat1Number}</span>
-              <span className="stat-text">{content.stat1Text}</span>
+              <div className="stat-number">{heroData.stat1Number}</div>
+              <div className="stat-text">{heroData.stat1Text}</div>
             </div>
             <div className="stat-item">
-              <span className="stat-number">{content.stat2Number}</span>
-              <span className="stat-text">{content.stat2Text}</span>
+              <div className="stat-number">{heroData.stat2Number}</div>
+              <div className="stat-text">{heroData.stat2Text}</div>
             </div>
             <div className="stat-item">
-              <span className="stat-number">{content.stat3Number}</span>
-              <span className="stat-text">{content.stat3Text}</span>
+              <div className="stat-number">{heroData.stat3Number}</div>
+              <div className="stat-text">{heroData.stat3Text}</div>
             </div>
             <div className="stat-item">
-              <span className="stat-number">{content.stat4Number}</span>
-              <span className="stat-text">{content.stat4Text}</span>
+              <div className="stat-number">{heroData.stat4Number}</div>
+              <div className="stat-text">{heroData.stat4Text}</div>
             </div>
-          </div>
-          <div className="hero-actions">
-            <a href="#/who-we-are" className="btn btn-primary">Discover Our Mission</a>
-            <a href="#/join-us" className="btn btn-secondary">Join Our Research Community</a>
           </div>
         </div>
       </div>
