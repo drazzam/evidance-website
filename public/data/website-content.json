@@ -19,7 +19,7 @@
     "achievementsTitle": "Key Achievements",
     "achievementsContent": "Over 50 successful research projects completed, 250+ researchers trained, and numerous publications in high-impact journals.",
     "publicationsTitle": "Research Publications",
-    "publicationsContent": "Our researchers have published in prestigious journals including The Lancet, NEJM, and BMJ, contributing to global medical knowledge.",
+    "publicationsContent": "Our researchers have published in high-quality journals including Q1 and Q2 tier journals, contributing to global medical knowledge.",
     "storiesTitle": "Success Stories",
     "storiesContent": "From training medical students to leading international clinical trials, our success stories inspire the next generation of researchers."
   },
@@ -34,7 +34,7 @@
   "joinUs": {
     "title": "Join Our Research Community",
     "content": "Whether you're a medical student, healthcare professional, or experienced researcher, Evidance offers opportunities to grow your research career.",
-    "contactInfo": "Contact us at info@evidance.com or call +966 54 945 0781 to learn more about our programs and opportunities."
+    "contactInfo": "Contact us on WhatsApp at +966 54 945 0781 to learn more about our opportunities!"
   },
   "heroContent": {
     "title1": "Advancing Healthcare Through",
@@ -104,5 +104,5 @@
     "phone": "+966 54 945 0781",
     "address": "Kingdom of Saudi Arabia"
   },
-  "lastUpdated": "2025-08-30T00:48:27.110Z"
+  "lastUpdated": "2025-08-30T01:08:11.085Z"
 }
