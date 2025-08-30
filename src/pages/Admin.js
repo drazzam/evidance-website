@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import githubDataService from '../services/githubDataService';
 import './Admin.css';
 
 const Admin = () => {
@@ -6,11 +7,9 @@ const Admin = () => {
   const [loading, setLoading] = useState(false);
   const [saveStatus, setSaveStatus] = useState('');
   const [credentials, setCredentials] = useState({ username: '', password: '' });
+  const [githubToken, setGithubToken] = useState('');
+  const [showTokenSetup, setShowTokenSetup] = useState(false);
   const [activeTab, setActiveTab] = useState('content');
-  
-  // JSONBin configuration
-  const JSONBIN_BIN_ID = '68b175b643b1c97be92f274d';
-  const JSONBIN_MASTER_KEY = '$2a$10$WWXSel9VjGXEalWwyvd2P.t/EYY8DpBCWilIR1zqhYkVEFqt.1R4y';
   
   // Who We Are page structured content
   const [whoWeAre, setWhoWeAre] = useState({
@@ -77,15 +76,15 @@ const Admin = () => {
   // Home sections state
   const [homeSections, setHomeSections] = useState({
     publicationsTitle: 'Recent Publications',
-    publicationsText: 'Explore our latest research publications and contributions to medical science. Our work spans multiple disciplines including clinical trials, public health studies, and innovative healthcare solutions.',
+    publicationsText: 'Explore our latest research publications and contributions to medical science.',
     aimsTitle: 'What Are Our Aims and Goals?',
-    aimsText: 'We are committed to advancing clinical research in Saudi Arabia by providing comprehensive research education, facilitating innovative studies, and building a community of skilled healthcare researchers.',
+    aimsText: 'We are committed to advancing clinical research in Saudi Arabia.',
     researchTitle: 'Research Impact & Innovation',
-    researchText: 'Our research has contributed to significant advancements in healthcare delivery across the Kingdom. Through collaborative efforts with leading institutions, we have pioneered new methodologies and established best practices in clinical research.',
+    researchText: 'Our research has contributed to significant advancements in healthcare.',
     visionaryTitle: 'Our Visionary Model',
-    visionaryText: 'Our unique modified CRO model combines traditional clinical research excellence with innovative educational approaches, creating opportunities for healthcare professionals to engage in meaningful research while maintaining their clinical practice.',
+    visionaryText: 'Our unique modified CRO model combines excellence with innovation.',
     joinUsTitle: 'Join Us!',
-    joinUsText: 'Become part of Saudi Arabia\'s leading clinical research community. Whether you\'re a healthcare student, practitioner, or researcher, we provide the training, mentorship, and resources you need to succeed in clinical research.'
+    joinUsText: 'Become part of Saudi Arabia\'s leading clinical research community.'
   });
 
   // Publications state
@@ -105,61 +104,15 @@ const Admin = () => {
     address: 'Riyadh, Kingdom of Saudi Arabia'
   });
 
-  // Load data from JSONBin
-  const loadFromJSONBin = async () => {
+  // Load data from GitHub
+  const loadFromGitHub = async () => {
     try {
       setLoading(true);
-      console.log('Loading from JSONBin...');
+      console.log('Loading from GitHub...');
       
-      const response = await fetch(`https://api.jsonbin.io/v3/b/${JSONBIN_BIN_ID}/latest`, {
-        method: 'GET',
-        headers: {
-          'X-Master-Key': JSONBIN_MASTER_KEY,
-          'Content-Type': 'application/json'
-        }
-      });
-
-      console.log('Response status:', response.status);
+      const data = await githubDataService.loadData();
       
-      if (response.ok) {
-        const result = await response.json();
-        console.log('Data loaded:', result);
-        const data = result.record;
-        
-        if (data) {
-          if (data.whoWeAre) setWhoWeAre(data.whoWeAre);
-          if (data.aimsGoals) setAimsGoals(data.aimsGoals);
-          if (data.successRecord) setSuccessRecord(data.successRecord);
-          if (data.visionaryModel) setVisionaryModel(data.visionaryModel);
-          if (data.joinUs) setJoinUs(data.joinUs);
-          if (data.heroContent) setHeroContent(data.heroContent);
-          if (data.homeSections) setHomeSections(data.homeSections);
-          if (data.publications) setPublications(data.publications);
-          if (data.contactInfo) setContactInfo(data.contactInfo);
-          
-          // Also update localStorage
-          localStorage.setItem('evidance_data', JSON.stringify(data));
-        }
-      } else {
-        console.error('Failed to load from JSONBin:', response.statusText);
-        // Try loading from localStorage as fallback
-        loadFromLocalStorage();
-      }
-    } catch (error) {
-      console.error('Error loading from JSONBin:', error);
-      // Try loading from localStorage as fallback
-      loadFromLocalStorage();
-    } finally {
-      setLoading(false);
-    }
-  };
-
-  // Load from localStorage as fallback
-  const loadFromLocalStorage = () => {
-    try {
-      const saved = localStorage.getItem('evidance_data');
-      if (saved) {
-        const data = JSON.parse(saved);
+      if (data) {
         if (data.whoWeAre) setWhoWeAre(data.whoWeAre);
         if (data.aimsGoals) setAimsGoals(data.aimsGoals);
         if (data.successRecord) setSuccessRecord(data.successRecord);
@@ -169,17 +122,29 @@ const Admin = () => {
         if (data.homeSections) setHomeSections(data.homeSections);
         if (data.publications) setPublications(data.publications);
         if (data.contactInfo) setContactInfo(data.contactInfo);
+        
+        console.log('Data loaded successfully');
       }
     } catch (error) {
-      console.error('Error loading from localStorage:', error);
+      console.error('Error loading from GitHub:', error);
+    } finally {
+      setLoading(false);
     }
   };
 
-  // Save data to JSONBin
-  const saveToJSONBin = async () => {
+  // Save data to GitHub
+  const saveToGitHub = async () => {
     try {
+      // Check if token is set
+      if (!githubDataService.token && !githubDataService.getStoredToken()) {
+        setShowTokenSetup(true);
+        setSaveStatus('⚠️ Please set up your GitHub token first');
+        setTimeout(() => setSaveStatus(''), 3000);
+        return;
+      }
+
       setLoading(true);
-      setSaveStatus('Saving changes...');
+      setSaveStatus('Saving to GitHub...');
       
       const allData = {
         whoWeAre,
@@ -190,42 +155,52 @@ const Admin = () => {
         heroContent,
         homeSections,
         publications,
-        contactInfo,
-        lastUpdated: new Date().toISOString()
+        contactInfo
       };
 
-      // First save to localStorage
-      localStorage.setItem('evidance_data', JSON.stringify(allData));
+      const result = await githubDataService.saveData(allData);
       
-      console.log('Saving to JSONBin...');
-      
-      const response = await fetch(`https://api.jsonbin.io/v3/b/${JSONBIN_BIN_ID}`, {
-        method: 'PUT',
-        headers: {
-          'Content-Type': 'application/json',
-          'X-Master-Key': JSONBIN_MASTER_KEY
-        },
-        body: JSON.stringify(allData)
-      });
-
-      console.log('Save response status:', response.status);
-      
-      if (response.ok) {
-        setSaveStatus('✓ Changes saved successfully! All devices will see the updates.');
+      if (result.success) {
+        setSaveStatus('✅ ' + result.message);
         setTimeout(() => setSaveStatus(''), 5000);
       } else {
-        const errorText = await response.text();
-        console.error('Save error response:', errorText);
-        setSaveStatus('Saved locally. JSONBin update pending.');
+        setSaveStatus('⚠️ ' + result.message);
         setTimeout(() => setSaveStatus(''), 5000);
       }
     } catch (error) {
       console.error('Error saving:', error);
-      setSaveStatus('Saved locally. Cloud sync failed.');
+      setSaveStatus('❌ Error: ' + error.message);
       setTimeout(() => setSaveStatus(''), 5000);
     } finally {
       setLoading(false);
     }
+  };
+
+  // Save GitHub token
+  const handleSaveToken = async () => {
+    if (!githubToken) {
+      alert('Please enter a GitHub token');
+      return;
+    }
+
+    setLoading(true);
+    
+    // Validate token
+    const validation = await githubDataService.validateToken(githubToken);
+    
+    if (validation.valid) {
+      githubDataService.setToken(githubToken);
+      setShowTokenSetup(false);
+      setSaveStatus(`✅ Token saved! Connected as ${validation.username}`);
+      setTimeout(() => setSaveStatus(''), 3000);
+      
+      // Load data after token is set
+      await loadFromGitHub();
+    } else {
+      alert('Invalid token: ' + validation.error);
+    }
+    
+    setLoading(false);
   };
 
   // Load data on component mount
@@ -233,10 +208,18 @@ const Admin = () => {
     const authStatus = sessionStorage.getItem('adminAuth');
     if (authStatus === 'true') {
       setIsAuthenticated(true);
-      // First load from localStorage for instant display
-      loadFromLocalStorage();
-      // Then try to sync with JSONBin
-      loadFromJSONBin();
+      
+      // Initialize GitHub service
+      githubDataService.init();
+      
+      // Check if token exists
+      const storedToken = githubDataService.getStoredToken();
+      if (storedToken) {
+        setGithubToken(storedToken);
+      }
+      
+      // Load data
+      loadFromGitHub();
     }
   }, []);
 
@@ -245,8 +228,17 @@ const Admin = () => {
     if (credentials.username === 'admin' && credentials.password === 'AdminCNS12**') {
       setIsAuthenticated(true);
       sessionStorage.setItem('adminAuth', 'true');
-      loadFromLocalStorage();
-      loadFromJSONBin();
+      
+      // Initialize GitHub service
+      githubDataService.init();
+      
+      // Check if token exists
+      const storedToken = githubDataService.getStoredToken();
+      if (!storedToken) {
+        setShowTokenSetup(true);
+      } else {
+        loadFromGitHub();
+      }
     } else {
       alert('Invalid credentials!');
     }
@@ -298,24 +290,90 @@ const Admin = () => {
     );
   }
 
+  // GitHub Token Setup Modal
+  if (showTokenSetup) {
+    return (
+      <div className="admin-panel">
+        <div className="admin-header">
+          <h1>GitHub Token Setup</h1>
+          <button onClick={handleLogout} className="btn btn-secondary">Logout</button>
+        </div>
+        
+        <div className="admin-content">
+          <div className="admin-section">
+            <h2>Setup GitHub Access Token</h2>
+            <p>To save changes globally, you need a GitHub Personal Access Token.</p>
+            
+            <div style={{background: '#f0f0f0', padding: '20px', borderRadius: '8px', marginBottom: '20px'}}>
+              <h3>⚠️ Enter Your GitHub Token:</h3>
+              <p style={{color: '#d73502', fontWeight: 'bold'}}>
+                Your token has been provided. Enter it below to connect to GitHub.
+              </p>
+            </div>
+            
+            <div className="form-group">
+              <label>GitHub Personal Access Token:</label>
+              <input
+                type="password"
+                placeholder="ghp_xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx"
+                value={githubToken}
+                onChange={(e) => setGithubToken(e.target.value)}
+                style={{width: '100%', padding: '10px', fontSize: '14px', fontFamily: 'monospace'}}
+              />
+            </div>
+            
+            <div style={{marginTop: '20px'}}>
+              <button 
+                onClick={handleSaveToken} 
+                className="btn btn-primary"
+                disabled={loading || !githubToken}
+              >
+                {loading ? 'Validating...' : 'Save Token & Continue'}
+              </button>
+              <button 
+                onClick={() => setShowTokenSetup(false)} 
+                className="btn btn-secondary"
+                style={{marginLeft: '10px'}}
+              >
+                Skip (Local Save Only)
+              </button>
+            </div>
+            
+            <p style={{marginTop: '20px', color: '#666', fontSize: '14px'}}>
+              ⚠️ This token will be stored securely in your browser's local storage.
+              Never share this token or commit it to code.
+            </p>
+          </div>
+        </div>
+      </div>
+    );
+  }
+
   return (
     <div className="admin-panel">
       <div className="admin-header">
         <h1>Evidance Admin Panel</h1>
         <div className="admin-header-actions">
           <button 
-            onClick={saveToJSONBin} 
+            onClick={() => setShowTokenSetup(true)} 
+            className="btn btn-secondary"
+            title="Configure GitHub Token"
+          >
+            ⚙️ Settings
+          </button>
+          <button 
+            onClick={saveToGitHub} 
             className="btn btn-accent"
             disabled={loading}
           >
-            {loading ? 'Saving...' : 'Save All Changes'}
+            {loading ? 'Saving...' : '💾 Save to GitHub'}
           </button>
           <button onClick={handleLogout} className="btn btn-secondary">Logout</button>
         </div>
       </div>
 
       {saveStatus && (
-        <div className={`save-status ${saveStatus.includes('✓') ? 'success' : saveStatus.includes('locally') ? 'warning' : 'error'}`}>
+        <div className={`save-status ${saveStatus.includes('✅') ? 'success' : saveStatus.includes('⚠️') ? 'warning' : 'error'}`}>
           {saveStatus}
         </div>
       )}
