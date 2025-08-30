@@ -87,13 +87,8 @@
   font-weight: 700;
   color: white;
   margin: 0;
-  text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
   position: relative;
   z-index: 2;
-  background: linear-gradient(45deg, #ffffff, #e8f4fd, #ffffff);
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-  background-clip: text;
 }
 
 .page-content {
@@ -149,13 +144,6 @@
 
 .content-text p:last-child {
   margin-bottom: 0;
-}
-
-.content-text p:first-of-type:first-letter {
-  font-size: 1.4em;
-  font-weight: 700;
-  color: #667eea;
-  margin-right: 3px;
 }
 
 /* Contact Section */
