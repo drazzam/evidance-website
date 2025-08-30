@@ -23,20 +23,25 @@ const Hero = () => {
     return () => clearInterval(interval);
   }, []);
 
-  const loadContent = () => {
-    try {
-      // Load from localStorage (updated by Admin panel)
-      const saved = localStorage.getItem('evidance_data');
-      if (saved) {
-        const data = JSON.parse(saved);
-        if (data.heroContent) {
-          setContent(data.heroContent);
-        }
+const loadContent = async () => {
+  try {
+    const response = await fetch(`${process.env.PUBLIC_URL}/data/website-content.json?t=${Date.now()}`);
+    if (response.ok) {
+      const data = await response.json();
+      if (data.heroContent) {
+        setContent(data.heroContent);
       }
-    } catch (error) {
-      console.error('Error loading content:', error);
     }
-  };
+  } catch (error) {
+    const saved = localStorage.getItem('evidance_data');
+    if (saved) {
+      const data = JSON.parse(saved);
+      if (data.heroContent) {
+        setContent(data.heroContent);
+      }
+    }
+  }
+};
 
   return (
     <section className="hero">
