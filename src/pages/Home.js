@@ -27,29 +27,59 @@ const Home = () => {
 
   useEffect(() => {
     loadContent();
-    const interval = setInterval(loadContent, 30000);
+    // Refresh content every 60 seconds to check for updates
+    const interval = setInterval(loadContent, 60000);
     return () => clearInterval(interval);
   }, []);
 
-  const loadContent = () => {
+  const loadContent = async () => {
     try {
-      const saved = localStorage.getItem('evidance_data');
-      if (saved) {
-        const data = JSON.parse(saved);
-        if (data.homeSections) setContent(data.homeSections);
-        if (data.publications) setPublications(data.publications);
+      // Load from GitHub-hosted JSON file
+      // The ?t=${Date.now()} prevents browser caching
+      const response = await fetch(`${process.env.PUBLIC_URL}/data/website-content.json?t=${Date.now()}`);
+      
+      if (response.ok) {
+        const data = await response.json();
+        
+        // Update home sections content
+        if (data.homeSections) {
+          setContent(data.homeSections);
+        }
+        
+        // Update publications
+        if (data.publications) {
+          setPublications(data.publications);
+        }
+      } else {
+        // Fallback to localStorage if GitHub file not available
+        loadFromLocalStorage();
       }
     } catch (error) {
-      console.error('Error loading content:', error);
+      console.error('Error loading from GitHub:', error);
+      // Fallback to localStorage
+      loadFromLocalStorage();
     }
   };
 
-  // Default placeholder image for publications
+  const loadFromLocalStorage = () => {
+    const saved = localStorage.getItem('evidance_data');
+    if (saved) {
+      try {
+        const data = JSON.parse(saved);
+        if (data.homeSections) setContent(data.homeSections);
+        if (data.publications) setPublications(data.publications);
+      } catch (error) {
+        console.error('Error parsing localStorage data:', error);
+      }
+    }
+  };
+
+  // Get publication image with fallback
   const getPublicationImage = (pub) => {
     if (pub.image) {
-      return pub.image; // Base64 from admin panel
+      return pub.image; // Base64 image from admin panel
     }
-    // Default placeholder image
+    // Return placeholder or default image
     return `${process.env.PUBLIC_URL}/images/publication-placeholder.png`;
   };
 
@@ -69,7 +99,8 @@ const Home = () => {
                   alt={pub.title}
                   className="publication-image"
                   onError={(e) => {
-                    e.target.src = `${process.env.PUBLIC_URL}/images/publication-placeholder.png`;
+                    // If image fails to load, hide it or show placeholder
+                    e.target.style.display = 'none';
                   }}
                 />
                 <h3>{pub.title}</h3>
