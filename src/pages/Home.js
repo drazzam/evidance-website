@@ -1,157 +1,208 @@
 import React, { useState, useEffect } from 'react';
+import { Link } from 'react-router-dom';
 import Hero from '../components/Hero';
 import './Home.css';
 
 const Home = () => {
-  const [content, setContent] = useState({
-    publicationsTitle: 'Recent Publications',
-    publicationsText: 'Explore our latest research publications and contributions to medical science.',
-    aimsTitle: 'What Are Our Aims and Goals?',
-    aimsText: 'We are committed to advancing clinical research in Saudi Arabia.',
-    researchTitle: 'Research Impact & Innovation',
-    researchText: 'Our research has contributed to significant advancements in healthcare.',
-    visionaryTitle: 'Our Visionary Model',
-    visionaryText: 'Our unique modified CRO model combines excellence with innovation.',
-    joinUsTitle: 'Join Us!',
-    joinUsText: 'Become part of Saudi Arabia\'s leading clinical research community.'
+  const [homeData, setHomeData] = useState({
+    homeSections: {
+      publicationsTitle: 'Publications',
+      publicationsText: 'Explore our latest research findings and academic publications.',
+      aimsTitle: 'Our Aims & Goals',
+      aimsText: 'Discover our mission to advance evidence-based research methodologies.',
+      researchTitle: 'Success Record',
+      researchText: 'Review our track record of successful research projects and outcomes.',
+      visionaryTitle: 'Visionary Model',
+      visionaryText: 'Learn about our innovative approach to research and development.',
+      joinUsTitle: 'Join Us',
+      joinUsText: 'Become part of our research community and contribute to evidence-based solutions.'
+    },
+    publications: []
   });
-
-  const [publications, setPublications] = useState([
-    { id: 1, image: '', title: 'Research Publication 1', description: 'Description 1' },
-    { id: 2, image: '', title: 'Research Publication 2', description: 'Description 2' },
-    { id: 3, image: '', title: 'Research Publication 3', description: 'Description 3' },
-    { id: 4, image: '', title: 'Research Publication 4', description: 'Description 4' },
-    { id: 5, image: '', title: 'Research Publication 5', description: 'Description 5' },
-    { id: 6, image: '', title: 'Research Publication 6', description: 'Description 6' }
-  ]);
-
-  useEffect(() => {
-    loadContent();
-    // Refresh content every 60 seconds to check for updates
-    const interval = setInterval(loadContent, 60000);
-    return () => clearInterval(interval);
-  }, []);
+  const [isLoading, setIsLoading] = useState(true);
+  const [error, setError] = useState(null);
 
   const loadContent = async () => {
     try {
-      // Load from GitHub-hosted JSON file
-      // The ?t=${Date.now()} prevents browser caching
-      const response = await fetch(`${process.env.PUBLIC_URL}/data/website-content.json?t=${Date.now()}`);
+      setError(null);
+      const response = await fetch(`${process.env.PUBLIC_URL}/data/website-content.json?t=${Date.now()}`, {
+        cache: 'no-cache',
+        headers: {
+          'Cache-Control': 'no-cache',
+          'Pragma': 'no-cache'
+        }
+      });
       
-      if (response.ok) {
-        const data = await response.json();
-        
-        // Update home sections content
-        if (data.homeSections) {
-          setContent(data.homeSections);
-        }
-        
-        // Update publications
-        if (data.publications) {
-          setPublications(data.publications);
-        }
-      } else {
-        // Fallback to localStorage if GitHub file not available
-        loadFromLocalStorage();
+      if (!response.ok) {
+        throw new Error(`HTTP error! status: ${response.status}`);
       }
-    } catch (error) {
-      console.error('Error loading from GitHub:', error);
-      // Fallback to localStorage
-      loadFromLocalStorage();
+      
+      const data = await response.json();
+      
+      const updatedData = {};
+      
+      if (data.homeSections) {
+        updatedData.homeSections = {
+          ...homeData.homeSections,
+          ...data.homeSections
+        };
+      }
+      
+      if (data.publications) {
+        updatedData.publications = data.publications;
+      }
+      
+      if (Object.keys(updatedData).length > 0) {
+        setHomeData(prevData => ({
+          ...prevData,
+          ...updatedData
+        }));
+        // Store in localStorage as backup
+        localStorage.setItem('evidance_homeContent', JSON.stringify(updatedData));
+      }
+      
+      setIsLoading(false);
+    } catch (err) {
+      console.warn('Failed to fetch home content from GitHub:', err);
+      setError(err.message);
+      
+      // Try to load from localStorage as fallback
+      const cachedData = localStorage.getItem('evidance_homeContent');
+      if (cachedData) {
+        try {
+          const parsedData = JSON.parse(cachedData);
+          setHomeData(prevData => ({
+            ...prevData,
+            ...parsedData
+          }));
+          console.log('Loaded home content from cache');
+        } catch (parseErr) {
+          console.error('Error parsing cached home data:', parseErr);
+        }
+      }
+      
+      setIsLoading(false);
     }
   };
 
-  const loadFromLocalStorage = () => {
-    const saved = localStorage.getItem('evidance_data');
-    if (saved) {
-      try {
-        const data = JSON.parse(saved);
-        if (data.homeSections) setContent(data.homeSections);
-        if (data.publications) setPublications(data.publications);
-      } catch (error) {
-        console.error('Error parsing localStorage data:', error);
-      }
-    }
-  };
+  useEffect(() => {
+    loadContent();
+    
+    // Set up auto-refresh every 60 seconds
+    const refreshInterval = setInterval(loadContent, 60000);
+    
+    return () => {
+      clearInterval(refreshInterval);
+    };
+  }, []);
 
-  // Get publication image with fallback
-  const getPublicationImage = (pub) => {
-    if (pub.image) {
-      return pub.image; // Base64 image from admin panel
-    }
-    // Return placeholder or default image
-    return `${process.env.PUBLIC_URL}/images/publication-placeholder.png`;
-  };
+  if (isLoading) {
+    return (
+      <div className="home-page">
+        <Hero />
+        <main className="main-content">
+          <div className="loading-spinner">Loading home content...</div>
+        </main>
+      </div>
+    );
+  }
 
   return (
-    <div className="home">
+    <div className="home-page">
       <Hero />
       
-      <section className="publications-section">
-        <div className="container">
-          <h2 className="section-title">{content.publicationsTitle}</h2>
-          <p className="section-subtitle">{content.publicationsText}</p>
-          <div className="publications-grid">
-            {publications.map((pub) => (
-              <div key={pub.id} className="publication-card">
-                <img 
-                  src={getPublicationImage(pub)} 
-                  alt={pub.title}
-                  className="publication-image"
-                  onError={(e) => {
-                    // If image fails to load, hide it or show placeholder
-                    e.target.style.display = 'none';
-                  }}
-                />
-                <h3>{pub.title}</h3>
-                <p>{pub.description}</p>
+      <main className="main-content">
+        {error && (
+          <div className="error-notice" style={{ 
+            backgroundColor: '#fff3cd', 
+            color: '#856404', 
+            padding: '15px', 
+            borderRadius: '4px', 
+            marginBottom: '30px',
+            textAlign: 'center',
+            fontSize: '14px'
+          }}>
+            Using cached content (GitHub data temporarily unavailable)
+          </div>
+        )}
+
+        <section className="home-sections">
+          <div className="container">
+            <div className="sections-grid">
+              
+              <Link to="/publications" className="section-card">
+                <div className="section-content">
+                  <h2>{homeData.homeSections.publicationsTitle}</h2>
+                  <p>{homeData.homeSections.publicationsText}</p>
+                  <div className="card-arrow">→</div>
+                </div>
+              </Link>
+
+              <Link to="/aims-goals" className="section-card">
+                <div className="section-content">
+                  <h2>{homeData.homeSections.aimsTitle}</h2>
+                  <p>{homeData.homeSections.aimsText}</p>
+                  <div className="card-arrow">→</div>
+                </div>
+              </Link>
+
+              <Link to="/success-record" className="section-card">
+                <div className="section-content">
+                  <h2>{homeData.homeSections.researchTitle}</h2>
+                  <p>{homeData.homeSections.researchText}</p>
+                  <div className="card-arrow">→</div>
+                </div>
+              </Link>
+
+              <Link to="/visionary-model" className="section-card">
+                <div className="section-content">
+                  <h2>{homeData.homeSections.visionaryTitle}</h2>
+                  <p>{homeData.homeSections.visionaryText}</p>
+                  <div className="card-arrow">→</div>
+                </div>
+              </Link>
+
+              <Link to="/join-us" className="section-card">
+                <div className="section-content">
+                  <h2>{homeData.homeSections.joinUsTitle}</h2>
+                  <p>{homeData.homeSections.joinUsText}</p>
+                  <div className="card-arrow">→</div>
+                </div>
+              </Link>
+
+            </div>
+          </div>
+        </section>
+
+        {homeData.publications && homeData.publications.length > 0 && (
+          <section className="featured-publications">
+            <div className="container">
+              <h2>Featured Publications</h2>
+              <div className="publications-preview">
+                {homeData.publications.slice(0, 3).map((publication) => (
+                  <div key={publication.id} className="publication-preview-card">
+                    {publication.image && (
+                      <div className="publication-image">
+                        <img src={publication.image} alt={publication.title} />
+                      </div>
+                    )}
+                    <div className="publication-content">
+                      <h3>{publication.title}</h3>
+                      <p>{publication.description}</p>
+                    </div>
+                  </div>
+                ))}
               </div>
-            ))}
-          </div>
-        </div>
-      </section>
+              <div className="view-all-publications">
+                <Link to="/publications" className="btn btn-primary">
+                  View All Publications
+                </Link>
+              </div>
+            </div>
+          </section>
+        )}
 
-      <section className="aims-section">
-        <div className="container">
-          <h2 className="section-title">{content.aimsTitle}</h2>
-          <p className="section-text">{content.aimsText}</p>
-          <a href="#/aims-goals" className="btn btn-primary">Learn More</a>
-        </div>
-      </section>
-
-      <section className="research-section">
-        <div className="container centered-content">
-          <h2 className="section-title">{content.researchTitle}</h2>
-          <p className="section-text">{content.researchText}</p>
-          <div className="collaborations">
-            <img 
-              src={`${process.env.PUBLIC_URL}/images/Vision_2030.png`}
-              alt="Vision 2030" 
-              className="collab-logo"
-            />
-            <p className="collab-text">
-              In alignment with Saudi Vision 2030, we're building research capacity
-              and fostering innovation in healthcare across the Kingdom.
-            </p>
-          </div>
-        </div>
-      </section>
-
-      <section className="visionary-section">
-        <div className="container">
-          <h2 className="section-title">{content.visionaryTitle}</h2>
-          <p className="section-text">{content.visionaryText}</p>
-          <a href="#/visionary-model" className="btn btn-secondary">Explore Our Model</a>
-        </div>
-      </section>
-
-      <section className="join-section">
-        <div className="container">
-          <h2 className="section-title">{content.joinUsTitle}</h2>
-          <p className="section-text">{content.joinUsText}</p>
-          <a href="#/join-us" className="btn btn-accent">Get Started</a>
-        </div>
-      </section>
+      </main>
     </div>
   );
 };
