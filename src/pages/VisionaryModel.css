@@ -93,16 +93,8 @@
   font-weight: 700;
   color: white;
   margin: 0;
-  text-shadow: 
-    2px 2px 4px rgba(0, 0, 0, 0.3),
-    0 0 20px rgba(255, 255, 255, 0.5);
   position: relative;
   z-index: 2;
-  background: linear-gradient(45deg, #ffffff, #f0f8ff, #ffffff);
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-  background-clip: text;
-  animation: textGlow 2s ease-in-out infinite alternate;
 }
 
 .page-content {
@@ -151,9 +143,9 @@
 }
 
 .content-section:hover {
-  transform: translateY(-10px) rotateX(5deg);
+  transform: translateY(-3px);
   box-shadow: 
-    0 25px 70px rgba(0, 0, 0, 0.3),
+    0 15px 35px rgba(0, 0, 0, 0.25),
     inset 0 1px 0 rgba(255, 255, 255, 0.3),
     0 1px 0 rgba(255, 255, 255, 0.2);
   background: rgba(255, 255, 255, 0.18);
@@ -205,32 +197,10 @@
   color: rgba(255, 255, 255, 0.95);
   margin-bottom: 28px;
   text-align: justify;
-  position: relative;
-  padding-left: 25px;
-  text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.2);
-}
-
-.content-text p::before {
-  content: '◆';
-  position: absolute;
-  left: 0;
-  top: 0;
-  color: rgba(255, 255, 255, 0.7);
-  font-size: 0.8em;
-  text-shadow: 0 0 10px rgba(255, 255, 255, 0.5);
 }
 
 .content-text p:last-child {
   margin-bottom: 0;
-}
-
-.content-text p:first-of-type:first-letter {
-  font-size: 1.6em;
-  font-weight: 700;
-  color: white;
-  margin-right: 3px;
-  text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
-  filter: drop-shadow(0 0 10px rgba(255, 255, 255, 0.5));
 }
 
 @keyframes fadeIn {
